@@ -10,7 +10,7 @@ lmFinalModel<-function(u.big.tst){
 	ZIP <- u.big.tst$ZIP #parse it from u.big.tst
 	u.big.tst$ZIP <- as.factor(sapply(ZIP,ZIP_extractor)) #reassign after factorizing the vector
 	hardwired_coef<-c() #lm outside of this function
-	p_rating<-rep(0,length(u.big.tst$userId)) #create a vector of 0s
+	p_rating<-rep(0,nrows(u.big.tst)) #create a vector of 0s
 	ans<-as.dataframe(cbind(u.big.tst$userId
 							,u.big.tst$movieId
 							,u.big.tst$age
