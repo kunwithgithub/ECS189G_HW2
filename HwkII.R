@@ -17,7 +17,7 @@ lmFinalModel<-function(u.big.tst){
 							,u.big.tst$gender
 							,p_rating)%*%hardwired_coef)
 	
-	require("MLmetrics") # a library that TA recommended
+	require(regtools) # a library that TA recommended
 	MAPE(u.big.tst$rating,ans$p_rating)	#MAPE 
 }
 
@@ -32,30 +32,13 @@ genres <- read.csv("ml-100k/u.genre", sep="|", check.names=FALSE, header=FALSE)
 movies <- movies[,c(-2:-5)]
 names(movies) <- c('movienum', as.character(genres[,1]))
 u.big <- merge(u.big, movies, by = "movienum", all.x = TRUE)
-u.big <- u.big[order(u.big$usernum, all$movienum),]
+u.big <- u.big[order(u.big$usernum, u.big$movienum),]
 
 
 tstRows <- function(seed=99){
   set.seed(seed)
   tstRows <- sample(1:100000, 5000)
   return(tstRows)
-}
-
-# Example
-# predictor: age, gender, genre
-xin_lm1 <- function(u.big){
-  require(regtools)
-  # preprocess the dataset
-  
-  
-  # divide u.big into training set(95,000) and test set(5,000)
-  tst <- tstRows()
-  u.big.tst <- u.big[tst,]
-  u.big.trn <- u.big[-tst,]
-}
-
-xin_nmf1 <- function(u.big.trn, u.big.tst){
-  
 }
 
 
