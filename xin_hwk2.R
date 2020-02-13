@@ -1,9 +1,7 @@
-genres <- read.csv("ml-100k/u.genre", sep="|", check.names=FALSE, header=FALSE)
-GenresName <- as.character(genres[,1])
 # Example
 # predictor: age, gender, genre, age * gender
 xin_lm1 <- function(u.big){
-  #require(regtools)
+  # require(regtools)
   # preprocess the dataset
   Female <- factorToDummies(u.big$gender, "G")
   u.big <- cbind(u.big, Female)
@@ -18,9 +16,7 @@ xin_lm1 <- function(u.big){
   u.big.tstY <- u.big.tst[,3]
   
   # test
-  lmout <- lm(rating ~ age + G.F + AgeGender + unknown + Action + Adventure + Animation + Comedy + 
-                Crime + Documentary + Drama + Fantasy + Horror + Musical + Mystery + Romance +
-                Thriller + War + Western, data=u.big)
+  lmout <- lm(indexToStr(u.big,c(5,9:29)), data=u.big.trn)
   print(lmout)
   res <- predict(lmout,u.big.tstX)
   res <- roundToNearestInt(res)
@@ -28,6 +24,11 @@ xin_lm1 <- function(u.big){
   print(MAPE(res, u.big.tstY))
 }
 
+xin_lm2 <- function(u.big){
+  require(regtools)
+  # preprocess
+  
+}
 xin_nmf1 <- function(u.big.trn, u.big.tst){
   
 }

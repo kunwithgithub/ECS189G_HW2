@@ -49,7 +49,10 @@ roundToNearestInt <- function(vec){
 }
 
 indexToStr <- function(u.big, index){
-  
+  str <- paste("rating", "~",
+        paste(colnames(u.big)[index], collapse = "+"),
+        sep = "")
+  return(str)
 }
 
 
