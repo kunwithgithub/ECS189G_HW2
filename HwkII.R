@@ -22,17 +22,20 @@ lmFinalModel<-function(u.big.tst){
 }
 
 # form the database we are gonna use for Hwk2
-ratings <- read.table('ml-100k/u.data')
-names(ratings) <- c('usernum', 'movienum', 'rating', 'transID')
-demog <- read.table('ml-100k/u.user', sep='|')
-names(demog) <- c('usernum', 'age', 'gender', 'occ', 'ZIP')
-u.big <- merge(ratings,demog,by.x=1,by.y=1)
-movies <- read.csv("ml-100k/u.item", sep="|", check.names=FALSE, header=FALSE, fill=TRUE)
-genres <- read.csv("ml-100k/u.genre", sep="|", check.names=FALSE, header=FALSE)
-movies <- movies[,c(-2:-5)]
-names(movies) <- c('movienum', as.character(genres[,1]))
-u.big <- merge(u.big, movies, by = "movienum", all.x = TRUE)
-u.big <- u.big[order(u.big$usernum, u.big$movienum),]
+initialization <- function() {
+	library(regtools)
+	ratings <- read.table('ml-100k/u.data')
+	names(ratings) <- c('usernum', 'movienum', 'rating', 'transID')
+	demog <- read.table('ml-100k/u.user', sep='|')
+	names(demog) <- c('usernum', 'age', 'gender', 'occ', 'ZIP')
+	u.big <- merge(ratings,demog,by.x=1,by.y=1)
+	movies <- read.csv("ml-100k/u.item", sep="|", check.names=FALSE, header=FALSE, fill=TRUE)
+	genres <- read.csv("ml-100k/u.genre", sep="|", check.names=FALSE, header=FALSE)
+	movies <- movies[,c(-2:-5)]
+	names(movies) <- c('movienum', as.character(genres[,1]))
+	u.big <- merge(u.big, movies, by = "movienum", all.x = TRUE)
+	u.big <- u.big[order(u.big$usernum, u.big$movienum),]
+}
 
 
 tstRows <- function(seed=99){
