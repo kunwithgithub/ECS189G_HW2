@@ -41,10 +41,15 @@ tstRows <- function(seed=99){
   return(tstRows)
 }
 
+roundToNearestInt <- function(vec){
+  a <- vec %% 1
+  vec[a >= 0.5] = ceiling(vec[a >= 0.5])
+  vec[a < 0.5] = floor(vec[a < 0.5])
+  return(vec)
+}
 
-
-
-
-
+indexToStr <- function(u.big, index){
+  
+}
 
 
