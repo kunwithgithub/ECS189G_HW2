@@ -6,6 +6,12 @@ ZIP_extractor<-function(ZIP){
 	as.integer(zip_code)
 }
 
+twodizip <- function(u.big) {
+	zip <- suppressWarnings(as.numeric(as.character(u.big$ZIP)))
+	u.big$ZIP <- as.factor(floor(zip/1000))
+	return (u.big)
+}
+
 lmFinalModel<-function(u.big.tst){
 	ZIP <- u.big.tst$ZIP #parse it from u.big.tst
 	u.big.tst$ZIP <- as.factor(sapply(ZIP,ZIP_extractor)) #reassign after factorizing the vector
@@ -35,8 +41,6 @@ initialization <- function() {
 	names(movies) <- c('movienum', as.character(genres[,1]))
 	u.big <- merge(u.big, movies, by = "movienum", all.x = TRUE)
 	u.big <- u.big[order(u.big$usernum, u.big$movienum),]
-	zip <- suppressWarnings(as.numeric(as.character(u.big$ZIP)))
-	u.big$ZIP <- as.factor(floor(zip/1000))
 }
 
 
