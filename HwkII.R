@@ -6,10 +6,10 @@ ZIP_extractor<-function(ZIP){
 	as.integer(zip_code)
 }
 
-twodizip <- function(u.big) {
+twodizip <- function(zip) {
 	zip <- suppressWarnings(as.numeric(as.character(u.big$ZIP)))
-	u.big$ZIP <- as.factor(floor(zip/1000))
-	return (u.big)
+	zip <- as.factor(floor(zip/1000))
+	return (zip)
 }
 
 lmFinalModel<-function(u.big.tst){
