@@ -35,8 +35,13 @@ initialization <- function() {
 	names(movies) <- c('movienum', as.character(genres[,1]))
 	u.big <- merge(u.big, movies, by = "movienum", all.x = TRUE)
 	u.big <- u.big[order(u.big$usernum, u.big$movienum),]
-	zip <- suppressWarnings(as.numeric(as.character(u.big$ZIP)))
-	u.big$ZIP <- as.factor(floor(zip/1000))
+	# print(sum(is.na(u.big$ZIP)))
+	# how to deal with ZIP
+	zips <- as.character(u.big$ZIP)
+	zips <- substr(zips,1,2)
+	u.big$ZIP <- as.factor(zips)
+	# print(sum(is.na(u.big$ZIP)))
+	return(u.big)
 }
 
 
@@ -54,8 +59,8 @@ roundToNearestInt <- function(vec){
 }
 
 indexToStr <- function(u.big, index){
-  str <- paste("rating", "~",
-        paste(colnames(u.big)[index], collapse = "+"),
+  str <- paste("rating ", "~",
+        paste(' ', colnames(u.big)[index], ' ', sep = "", collapse = "+"),
         sep = "")
   return(str)
 }
