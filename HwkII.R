@@ -35,6 +35,8 @@ initialization <- function() {
 	names(movies) <- c('movienum', as.character(genres[,1]))
 	u.big <- merge(u.big, movies, by = "movienum", all.x = TRUE)
 	u.big <- u.big[order(u.big$usernum, u.big$movienum),]
+	zip <- suppressWarnings(as.numeric(as.character(u.big$ZIP)))
+	u.big$ZIP <- as.factor(floor(zip/1000))
 }
 
 
