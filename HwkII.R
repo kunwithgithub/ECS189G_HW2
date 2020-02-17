@@ -6,6 +6,12 @@ ZIP_extractor<-function(ZIP){
 	as.integer(zip_code)
 }
 
+twodizip <- function(zip) {
+	zip <- suppressWarnings(as.numeric(as.character(u.big$ZIP)))
+	zip <- as.factor(floor(zip/1000))
+	return (zip)
+}
+
 lmFinalModel<-function(u.big.tst){
 	ZIP <- u.big.tst$ZIP #parse it from u.big.tst
 	u.big.tst$ZIP <- as.factor(sapply(ZIP,ZIP_extractor)) #reassign after factorizing the vector
