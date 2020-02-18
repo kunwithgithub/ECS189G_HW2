@@ -13,7 +13,7 @@ sk_lm1 <-function(u.big){
 	u.big.tstY <- u.big.tst[,3] #rating
   
 	lmout<-lm(ratings~transID+age+ZIP+gender+indexToStr(u.big,c(9:29)),u.big)
-	lmout<-$coefficients
+	lmout<-lmout$coefficients
 	res<-roundToNearestInt(predict(lmout,u.big.tstX))
 	print(MAPE(res,u,big.tstY))
 }
@@ -29,7 +29,7 @@ sk_lm2 <-function(u.big){
 	u.big.tstY <- u.big.tst[,3] #rating
   
 	lmout<-lm(ratings~age*transID+ZIP+gender*occ+indexToStr(u.big,c(9:29)),u.big)
-	lmout<-$coefficients
+	lmout<-lmout$coefficients
 	res<-roundToNearestInt(predict(lmout,u.big.tstX))
 	print(MAPE(res,u,big.tstY))
 }
