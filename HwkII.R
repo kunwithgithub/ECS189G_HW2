@@ -6,6 +6,12 @@ ZIP_extractor<-function(ZIP){
 	as.integer(zip_code)
 }
 
+twodizip <- function(zip) {
+	zip <- suppressWarnings(as.numeric(as.character(u.big$ZIP)))
+	zip <- as.factor(floor(zip/1000))
+	return (zip)
+}
+
 lmFinalModel<-function(u.big.tst){
 	ZIP <- u.big.tst$ZIP #parse it from u.big.tst
 	u.big.tst$ZIP <- as.factor(sapply(ZIP,ZIP_extractor)) #reassign after factorizing the vector
@@ -35,6 +41,13 @@ initialization <- function() {
 	names(movies) <- c('movienum', as.character(genres[,1]))
 	u.big <- merge(u.big, movies, by = "movienum", all.x = TRUE)
 	u.big <- u.big[order(u.big$usernum, u.big$movienum),]
+	# print(sum(is.na(u.big$ZIP)))
+	# how to deal with ZIP
+	zips <- as.character(u.big$ZIP)
+	zips <- substr(zips,1,2)
+	u.big$ZIP <- as.factor(zips)
+	# print(sum(is.na(u.big$ZIP)))
+	return(u.big)
 }
 
 
@@ -52,7 +65,10 @@ roundToNearestInt <- function(vec){
 }
 
 indexToStr <- function(u.big, index){
-  
+  str <- paste("rating ", "~",
+        paste(' ', colnames(u.big)[index], ' ', sep = "", collapse = "+"),
+        sep = "")
+  return(str)
 }
 
 
