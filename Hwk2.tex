@@ -28,11 +28,9 @@
 Our intuition to predicting ratings is based on factors that fundamentally represent the user's
 personality. Some features we considered are age, usernum, and occupation. To elaborate on this,
 we think that including usernum as a feature would let us know their rating based on how harshly
-or leniently usernum rates their movies. Basically, which feature contributes to the `personality`
-factor.
+or leniently a user rates their movies, based on their user ID. 
 
-
-Intuitively, occupation can also represent personality. For example, a retired person tends to rate
+Intuitively, occupation reflects a person's personality. For example, a retired person tends to rate
 movies higher than other occupations, which is likely due to the age. Since age likely affects
 the kind of occupation a person has, we decided to use the interaction term `age` and `occ` to predicting
 ratings. The MAPE obtained from this set of features is 0.8752.
