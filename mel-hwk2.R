@@ -34,10 +34,15 @@ trnSet <- u.big[-tst,]
 # PE: 0.87
 
 
-lmout1 <- lm(rating ~ age*gender + usernum + movienum, data=trnSet)
+lmout1 <- lm(rating ~ age*occ, data=trnSet)
 summary(lmout1)
 res <- predict(lmout1, tstSet)
 res <- roundToNearestInt(res)
+indx <- which(abs(res - tstSet[["rating"]]) > 2)
+subset <- tstSet[indx,]
+plot(indx, subset$occ)
+# errvec <- abs(res[-indx] - tstSet[["rating"]][-indx])
+# err <- MAPE(res[-indx], tstSet[["rating"]][-indx])
 errvec <- abs(res - tstSet[["rating"]])
 err <- MAPE(res, tstSet[["rating"]])
 err
@@ -45,12 +50,15 @@ plot(errvec)
 
 
 # NMF starts here
+
 library(recosystem)
 r <- Reco()
 train_set <- data_memory(trnSet$usernum, trnSet$movienum, rating=trnSet$rating) 
 test_set <- data_memory(tstSet$usernum, tstSet$movienum, rating=NULL)
-r$train(train_set)
+opts <- r$tune(train_set, opts=list(dim = c(20,30)))
+opts
+r$train(train_set, opts=c(niter=10))
 pred <- r$predict(test_set, out_memory())
 pred <- roundToNearestInt(pred)
-err <- MAPE(pred, trnSet$rating)
+err <- MAPE(pred, tstSet$rating)
 err
