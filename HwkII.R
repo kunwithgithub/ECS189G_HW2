@@ -28,23 +28,7 @@ lmFinalModel<-function(u.big.tst){
 }
 
 nmfmodel <- function(u.big) {
-	require(regtools)
-	require(recosystem)
-	ty <- Reco()
 
-	tst <- tstRows()
-	u.big.tst <- u.big[tst,]
-	u.big.trn <- u.big[-tst,]
-
-	trnst <- data_memory(u.big.trn$usernum, u.big.trn$movienum, rating = u.big.trn$rating)
-	tststX <- data_memory(u.big.tst$usernum, u.big.tst$movienum, rating = NULL)
-	tststY <- u.big.tst[,3]
-
-	ty$train(trnst, opts = list(dim = 20, niter = 40, nmf = TRUE))
-	res <- ty$predict(tststX, out_memory())
-	MAPE(res, tststY)
-	wh <- ty$output(out_memory(),out_memory())
-	save(wh, file = "WH.RData")
 }
 
 # form the database we are gonna use for Hwk2
