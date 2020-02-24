@@ -30,8 +30,16 @@ personality. Some features we considered are age, usernum, and occupation. To el
 we think that including usernum as a feature would let us know their rating based on how harshly
 or leniently a user rates their movies, based on their user ID. 
 
-Intuitively, occupation reflects a person's personality. For example, a retired person tends to rate
-movies higher than other occupations, which is likely due to the age. Since age likely affects
+\begin{figure}[ht!]
+\begin{center}
+\includegraphics[width=0.8\textwidth]{ratingxocc.png}
+\caption{Average Rating vs. Occupation}
+\end{center}
+\end{figure}
+
+Intuitively, occupation reflects a person's personality. We plotted the average rating given by
+each occupation. As shown in the plot, the ratings are not very uniform, which would probably
+make Occupation a good feature to predict ratings. Since age likely affects
 the kind of occupation a person has, we decided to use the interaction term `age` and `occ` to predicting
 ratings. The MAPE obtained from this set of features is 0.8752.
 

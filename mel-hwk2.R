@@ -32,6 +32,12 @@ trnSet <- u.big[-tst,]
 # PE: 0.85
 # Features: age x gender + usernum + movienum
 # PE: 0.87
+occs <- levels(u.big$occ)
+avg <- avgOccRating(u.big, occs)
+names(avg) <- occs
+# avgOut <- as.data.frame(cbind(occs, avg))
+barplot(unlist(avg), xlab=NULL, ylab="Average Rating", las=2)
+
 
 
 lmout1 <- lm(rating ~ age*occ, data=trnSet)
@@ -40,7 +46,6 @@ res <- predict(lmout1, tstSet)
 res <- roundToNearestInt(res)
 indx <- which(abs(res - tstSet[["rating"]]) > 2)
 subset <- tstSet[indx,]
-plot(indx, subset$occ)
 # errvec <- abs(res[-indx] - tstSet[["rating"]][-indx])
 # err <- MAPE(res[-indx], tstSet[["rating"]][-indx])
 errvec <- abs(res - tstSet[["rating"]])

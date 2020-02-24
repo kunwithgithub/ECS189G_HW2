@@ -50,6 +50,15 @@ initialization <- function() {
 	return(u.big)
 }
 
+avgOccRating <- function(df, occname) {
+	ret <- list()
+	for (i in 1:length(occname)) {
+		index <- which(df$occ == occname[i])
+		avgOccname <- mean(df$rating[index])
+		ret[i] <- avgOccname
+	}
+	ret
+}
 
 tstRows <- function(seed=99){
   set.seed(seed)
