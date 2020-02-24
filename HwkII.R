@@ -27,7 +27,7 @@ lmFinalModel<-function(u.big.tst){
 	MAPE(u.big.tst$rating,ans$p_rating)	#MAPE 
 }
 
-nmfmodel <- function(u.big) {
+nmfFinalModel <- function(u.big) {
 
 }
 
