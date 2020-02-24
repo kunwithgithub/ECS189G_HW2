@@ -39,7 +39,7 @@ nmfFinalModel <- function(u.big) {
 	tststX <- data_memory(u.big.tst$usernum, u.big.tst$movienum, rating = NULL)
 	tststY <- u.big.tst[,3]
 
-	ty$train(trnst, opts = list(dim = 20, niter = 40, nmf = TRUE))
+	ty$train(trnst, opts = list(dim = 25, niter = 80, nmf = TRUE))
 	res <- ty$predict(tststX, out_memory())
 	MAPE(res, tststY)
 
