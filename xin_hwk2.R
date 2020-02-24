@@ -61,6 +61,7 @@ xin_lm2 <- function(u.big){
   occs <- factorToDummies(u.big$occ, "occ")
   u.big <- cbind(u.big, occs)
   cols <- ncol(u.big)
+  test(u.big, c(9,12,13,16:20,22:24))
   test(u.big, c(9,12,13,16:20,22:24,26:cols))
 }
 
@@ -118,8 +119,8 @@ xin_lm3 <- function(u.big){
   zips <- factorToDummies(u.big$ZIP, "zip")
   u.big <- cbind(u.big, zips)
   cols <- ncol(u.big)
-  #test(u.big, c(9,12,13,16:20,22:24,26:27,35, 40))
-  test(u.big, c(9,12,13,16:20,22:24,26:27,35, 40, 48:cols))
+  test(u.big, c(9,12,13,16:20,22:24,26:27,35,40))
+  test(u.big, c(9,12,13,16:20,22:24,26:27,35,40,48:cols))
 }
 
 # delete predictors:
@@ -132,13 +133,241 @@ xin_lm4 <- function(u.big){
   zips <- factorToDummies(u.big$ZIP, "zip")
   u.big <- cbind(u.big, zips)
   cols <- ncol(u.big)
-  # test(u.big, c(9,12,13,16:20,22:24,26:27,35,40))
+  test(u.big, c(9,12,13,16:20,22:24,26:27,35,40))
   test(u.big, c(9,12,13,16:20,22:24,26:27,35,40,48:cols))
+  test(u.big, c(9,12,13,16:20,22:24,26:27,35,40,58,69))
 }
 
-xin_nmf1 <- function(u.big.trn, u.big.tst){
-  require(recosystem)
+# first assumption: people of different ages will have different preference for movies
+# input a column of genres, plot average rating of that genre versus age
+# Comedy(14)?
+age_genres <- function(u.big, genre_col) {
+  require(ggplot2)
+  age_factor <- as.factor(u.big$age)
+  levels <- levels(age_factor)
+  res <- matrix(0,nrow=length(levels),ncol = 3)
+  for (i in 1:length(levels)) {
+    ageX <- u.big[age_factor == levels[i],]
+    ageX <- ageX[ageX[,genre_col] == 1, ]
+    average_rate <- mean(ageX$rating)
+    if(is.na(average_rate))
+      average_rate <- 0
+    res[i,1] <- as.numeric(levels[i])
+    res[i,2] <- average_rate
+    res[i,3] <- nrow(ageX)
+  }
+  res <- as.data.frame(res)
+  names(res) <- c("age","rating","sample_size")
+  print(res)
+  p <- ggplot(data = res, aes(x=age, y=rating)) + geom_point()
+  print(p)
+}
+# test interaction term:age*Drama
+xin_lm5 <- function(u.big) {
+  require(regtools)
+  # preprocess
+  occs <- factorToDummies(u.big$occ, "occ")
+  u.big <- cbind(u.big, occs)
+  zips <- factorToDummies(u.big$ZIP, "zip")
+  u.big <- cbind(u.big, zips)
+  cols <- ncol(u.big)
+  age_fantasy <- u.big$age * u.big$Fantasy
+  #age_western <- u.big$age * u.big$Western
+  #age_war <- u.big$age * u.big$War
+  #age_thriller <- u.big$age * u.big$Thriller
+  #age_mystery <- u.big$age * u.big$Mystery
+  #age_horror <- u.big$age * u.big$Horror
+  u.big <- cbind(u.big, age_fantasy)
+  test(u.big, c(9,12,13,16:20,22:24,26:27,35,40,48:ncol(u.big)))
+}
+
+# second assumption: people of different occupations will have different preference for movies
+occ_genres <- function(u.big, genre_col) {
+  require(ggplot2)
+  occ_factor <- as.factor(u.big$occ)
+  levels <- levels(occ_factor)
+  res <- matrix(0,nrow=length(levels),ncol = 3)
+  for (i in 1:length(levels)) {
+    occX <- u.big[occ_factor == levels[i],]
+    occX <- occX[occX[,genre_col] == 1, ]
+    average_rate <- mean(occX$rating)
+    if(is.na(average_rate))
+      average_rate <- 0
+    res[i,1] <- i
+    res[i,2] <- average_rate
+    res[i,3] <- nrow(occX)
+  }
+  res <- as.data.frame(res)
+  names(res) <- c("occ","rating","sample_size")
+  print(res)
+  p <- ggplot(data = res, aes(x=occ, y=rating)) + geom_point()
+  print(p)
+}
+
+xin_lm6 <- function(u.big) {
+  require(regtools)
+  # preprocess
+  occs <- factorToDummies(u.big$occ, "occ", FALSE)
+  u.big <- cbind(u.big, occs)
+  zips <- factorToDummies(u.big$ZIP, "zip")
+  u.big <- cbind(u.big, zips)
+  cols <- ncol(u.big)
+  age_fantasy <- u.big$age * u.big$Fantasy
+  first_four <- u.big$occ.administrator + u.big$occ.artist + u.big$occ.doctor + u.big$occ.educator
+  executive_comedy <- u.big$occ.executive * u.big$Comedy
+  occ_mystrery <- first_four*u.big$Mystery
+  artist_SciFi <- u.big$occ.artist * u.big$SciFi
+  writer_SciFi <- u.big$occ.writer * u.big$SciFi
+  writer_action <- u.big$occ.writer * u.big$Action
+  high_degree_occ <- u.big$occ.administrator + u.big$occ.artist + u.big$occ.doctor + u.big$occ.educator + u.big$occ.lawyer
+  #occ_drama <- first_four * u.big$Drama
+  #executive_documentary <- u.big$occ.executive * u.big$Documentary
+  #age_western <- u.big$age * u.big$Western
+  #age_war <- u.big$age * u.big$War
+  #age_thriller <- u.big$age * u.big$Thriller
+  #age_mystery <- u.big$age * u.big$Mystery
+  #age_horror <- u.big$age * u.big$Horror
+  u.big <- cbind(u.big, executive_comedy, occ_mystrery, artist_SciFi, writer_SciFi, writer_action, high_degree_occ)
+  test(u.big, c(9,12,13,16:20,22:24,26:27,35,40,49:ncol(u.big)))
+}
+
+# third assumption: movienum
+# some movie just better than others!
+rating_movienum <- function(u.big){
+  require(ggplot2)
+  mov_factor <- as.factor(u.big$movienum)
+  levels <- levels(mov_factor)
+  res <- matrix(0,nrow=length(levels),ncol = 3)
+  for (i in 1:length(levels)) {
+    movX <- u.big[mov_factor == levels[i],]
+    average_rate <- mean(movX$rating)
+    if(is.na(average_rate))
+      average_rate <- 0
+    res[i,1] <- as.numeric(levels[i])
+    res[i,2] <- average_rate
+    res[i,3] <- nrow(movX)
+  }
+  res <- as.data.frame(res)
+  names(res) <- c("mov","rating","sample_size")
+  print(res)
+  p <- ggplot(data = res, aes(x=mov, y=rating)) + geom_point()
+  print(p)
+}
+
+# define average rate >= 4.0, bestMovies
+# define average rate <= 3.5, worstMovies
+xin_lm7 <- function(u.big) {
+  mov_factor <- as.factor(u.big$movienum)
+  levels <- levels(mov_factor)
+  res <- matrix(0,nrow=length(levels),ncol = 3)
+  for (i in 1:length(levels)) {
+    movX <- u.big[mov_factor == levels[i],]
+    average_rate <- mean(movX$rating)
+    if(is.na(average_rate))
+      average_rate <- 0
+    res[i,1] <- as.numeric(levels[i])
+    if(average_rate >= 4.0)
+      res[i,2] <- 1
+    if(average_rate <= 3.5)
+      res[i,3] <- 1
+  }
+  res <- as.data.frame(res)
+  names(res) <- c("movienum","best_movie","worst_movie")
+  
+  require(regtools)
+  # preprocess
+  occs <- factorToDummies(u.big$occ, "occ", FALSE)
+  u.big <- cbind(u.big, occs)
+  zips <- factorToDummies(u.big$ZIP, "zip")
+  u.big <- cbind(u.big, zips)
+  cols <- ncol(u.big)
+  age_fantasy <- u.big$age * u.big$Fantasy
+  first_four <- u.big$occ.administrator + u.big$occ.artist + u.big$occ.doctor + u.big$occ.educator
+  executive_comedy <- u.big$occ.executive * u.big$Comedy
+  occ_mystrery <- first_four*u.big$Mystery
+  artist_SciFi <- u.big$occ.artist * u.big$SciFi
+  writer_SciFi <- u.big$occ.writer * u.big$SciFi
+  writer_action <- u.big$occ.writer * u.big$Action
+  high_degree_occ <- u.big$occ.administrator + u.big$occ.artist + u.big$occ.doctor + u.big$occ.educator + u.big$occ.lawyer
+  #occ_drama <- first_four * u.big$Drama
+  #executive_documentary <- u.big$occ.executive * u.big$Documentary
+  #age_western <- u.big$age * u.big$Western
+  #age_war <- u.big$age * u.big$War
+  #age_thriller <- u.big$age * u.big$Thriller
+  #age_mystery <- u.big$age * u.big$Mystery
+  #age_horror <- u.big$age * u.big$Horror
+  u.big <- cbind(u.big, executive_comedy, occ_mystrery, artist_SciFi, writer_SciFi, writer_action, high_degree_occ)
+  u.big <- merge(u.big, res, by = "movienum", all.x = TRUE)
+  test(u.big, c(9,12,13,16:20,22:24,26:27,35,40,49:ncol(u.big)))
+}
+
+# usernum?
+# might be some user just tend to be tougher than others?
+# define average rate >= 4.0: nice_person
+# define average rate <= 3.0: tough_person
+xin_lm8 <- function(u.big){
+  mov_factor <- as.factor(u.big$movienum)
+  levels <- levels(mov_factor)
+  mov <- matrix(0,nrow=length(levels),ncol = 3)
+  for (i in 1:length(levels)) {
+    movX <- u.big[mov_factor == levels[i],]
+    average_rate <- mean(movX$rating)
+    if(is.na(average_rate))
+      average_rate <- 0
+    mov[i,1] <- as.numeric(levels[i])
+    if(average_rate >= 4.0)
+      mov[i,2] <- 1
+    if(average_rate <= 3.5)
+      mov[i,3] <- 1
+  }
+  mov <- as.data.frame(mov)
+  names(mov) <- c("movienum","best_movie","worst_movie")
+  
+  usr_factor <- as.factor(u.big$usernum)
+  levels <- levels(usr_factor)
+  usr <- matrix(0,nrow=length(levels),ncol = 3)
+  for (i in 1:length(levels)) {
+    usrX <- u.big[usr_factor == levels[i],]
+    average_rate <- mean(usrX$rating)
+    if(is.na(average_rate))
+      average_rate <- 0
+    usr[i,1] <- as.numeric(levels[i])
+    if(average_rate >= 4.0)
+      usr[i,2] <- 1
+    if(average_rate <= 3.0)
+      usr[i,3] <- 1
+  }
+  usr <- as.data.frame(usr)
+  names(usr) <- c("usernum","nice_person","tough_person")
+  
+  require(regtools)
+  # preprocess
+  occs <- factorToDummies(u.big$occ, "occ", FALSE)
+  u.big <- cbind(u.big, occs)
+  zips <- factorToDummies(u.big$ZIP, "zip")
+  u.big <- cbind(u.big, zips)
+  cols <- ncol(u.big)
+  age_fantasy <- u.big$age * u.big$Fantasy
+  first_four <- u.big$occ.administrator + u.big$occ.artist + u.big$occ.doctor + u.big$occ.educator
+  executive_comedy <- u.big$occ.executive * u.big$Comedy
+  occ_mystrery <- first_four*u.big$Mystery
+  artist_SciFi <- u.big$occ.artist * u.big$SciFi
+  writer_SciFi <- u.big$occ.writer * u.big$SciFi
+  writer_action <- u.big$occ.writer * u.big$Action
+  high_degree_occ <- u.big$occ.administrator + u.big$occ.artist + u.big$occ.doctor + u.big$occ.educator + u.big$occ.lawyer
+  #occ_drama <- first_four * u.big$Drama
+  #executive_documentary <- u.big$occ.executive * u.big$Documentary
+  #age_western <- u.big$age * u.big$Western
+  #age_war <- u.big$age * u.big$War
+  #age_thriller <- u.big$age * u.big$Thriller
+  #age_mystery <- u.big$age * u.big$Mystery
+  #age_horror <- u.big$age * u.big$Horror
+  u.big <- cbind(u.big, executive_comedy, occ_mystrery, artist_SciFi, writer_SciFi, writer_action)
+  u.big <- merge(u.big, mov, by = "movienum", all.x = TRUE)
+  u.big <- merge(u.big, usr, by = "usernum", all.x = TRUE)
+  test(u.big, c(9,12,13,16:20,22:24,26:27,35,40,49:ncol(u.big)))
+}
+
+xin_nmf1 <- function(u.big.trn, u.big.tst) {
   
 }
-
-
