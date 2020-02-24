@@ -140,6 +140,7 @@ F-statistic:   156 on 19 and 94980 DF,  p-value: < 2.2e-16
 [1] 0.8778 # MAPE
 \end{verbatim}
 
+
 \subsection{Occupations}
 Our intuition to predicting ratings is based on factors that fundamentally represent the user's
 personality. Some features we considered are age, usernum, and occupation. To elaborate on this,
@@ -222,6 +223,478 @@ ratings. The MAPE obtained from this set of features is 0.8752.
     Multiple R-squared:  0.02956,   Adjusted R-squared:  0.02914 
     F-statistic: 70.54 on 41 and 94958 DF,  p-value: < 2.2e-16
 \end{verbatim}
-\section{Problem B}
+\section{nmf model}
+\tab{}In the nmf model, we input usernum, movienum, and rating as the input of the training set of the recosystem()'s \$train() function.
+\\*
+\tab{}We ran the \$train() function once with default tuning parameters beside the nmf = TRUE because we want the function to use nmf method instead of svd, and we want to see the MAPE() result with default settings so we could have a standard later on when we tune it.
+\\*
+\tab{}The MAPE() result for the nmf model is 0.7329318, which is not really "bad" consider it is already lower than our best lm model.
+\\*
+\tab{}To inrease the accuracy, we first tried different \textbf{\underline{dim}}, and see how the MAPE() result changed. We noticed that there would be an "optimal" number within a region, like a "local" optimize point so the result would be the lowest. Considering the rule of thumb that $p << \sqrt{n}$, we choose dim=25, as it improve the MAPE() result for 0.01 compared to the default one.
+\\*
+\tab{}Then, we tried different \textbf{\underline{niter}} since we discover the accuracy will increase as this parameter increase. But there is a asymptomatic ceiling for this parameter, which the improvement would not be noticeable or even could decrease the accuracy if we keep increasing it. Thus, after we played around with it, we set niter=80 as it improve our result for another 0.01.
+\\*
+\tab{}At last, our final nmf model's MAPE() result is 0.7139921 which improve by 0.02 compares to the original model with default tuning parameter.
+\\*
+\tab{}In addition, we also tried plugging in different predictors to user\_index and item\_index to see what happens to the predicting results. But the accuracy of the combinations we have tested are all worse than the original one with usernum and movienum. Thus, we still stick to our previous best model.
 
+
+
+
+
+
+
+
+
+\section*{Appendix}
+\subsection*{A lm model}
+\subsubsection{A.1 Pure Independent Models}
+
+\subsubsection*{A.2 Models with Covariates}
+\paragraph{A.2.1 Age$*$occ}
+
+\begin{verbatim}
+Call:
+lm(formula = rating ~ age * occ, data = u.big.trn)
+Coefficients:
+         (Intercept)                   age             occartist             occdoctor  
+           3.3457294             0.0073463            -0.6775732            -0.1125594  
+         occeducator           occengineer      occentertainment          occexecutive  
+           0.3647334            -0.0359133             0.6526975            -1.3817756  
+       occhealthcare          occhomemaker             occlawyer          occlibrarian  
+          -2.1325458            -0.3012994             0.0806203             0.0534024  
+        occmarketing               occnone              occother         occprogrammer  
+           0.3054019             0.5380508             0.1970186            -0.0590576  
+          occretired           occsalesman          occscientist            occstudent  
+          -0.3376369             0.1159735            -0.0424774             0.2005008  
+       occtechnician             occwriter         age:occartist         age:occdoctor  
+           0.2030625            -0.8011493             0.0247203             0.0056768  
+     age:occeducator       age:occengineer  age:occentertainment      age:occexecutive  
+          -0.0083699            -0.0007054            -0.0267839             0.0302180  
+   age:occhealthcare      age:occhomemaker         age:occlawyer      age:occlibrarian  
+           0.0360066             0.0009872             0.0013949            -0.0031238  
+    age:occmarketing           age:occnone          age:occother     age:occprogrammer  
+          -0.0116446            -0.0114218            -0.0071173             0.0014500  
+      age:occretired       age:occsalesman      age:occscientist        age:occstudent  
+           0.0001103            -0.0038728             0.0012039            -0.0085517  
+   age:occtechnician         age:occwriter  
+          -0.0079412             0.0168032  
+\end{verbatim}
+
+
+\paragraph{A.2.2 Age$*$Gender}
+\begin{verbatim}
+Call:
+lm(formula = rating ~ age * dum_gen.F, data = u.big.trn)
+Coefficients:
+  (Intercept)            age      dum_gen.F  age:dum_gen.F  
+    3.3512072      0.0053591      0.0303178     -0.0007553 
+\end{verbatim}
+
+
+\paragraph{A.2.3 movienum+usernum+genre+age$*$occ}
+\begin{verbatim}
+    Call:
+lm(formula = as.formula(indexToStr3(u.big, c(1, 2, 9:28), 5, 
+    c(29:48))), data = u.big.trn)
+Coefficients:
+              (Intercept)                   movienum                    usernum  
+                2.871e+00                 -6.169e-04                 -1.763e-05  
+                  unknown                     Action                  Adventure  
+               -3.004e-01                 -1.365e-01                  6.568e-02  
+                Animation                   Children                     Comedy  
+                3.160e-01                 -2.639e-01                 -1.191e-01  
+                    Crime                Documentary                      Drama  
+               -1.454e-02                  3.287e-01                  1.934e-01  
+                  Fantasy                   FilmNoir                     Horror  
+               -7.335e-02                  4.129e-01                 -1.593e-01  
+                  Musical                    Mystery                    Romance  
+                1.462e-02                  8.864e-02                  9.009e-02  
+                    SciFi                   Thriller                        War  
+               -9.738e-03                 -8.634e-03                  1.878e-01  
+                  Western                  dum_gen.F                        age  
+                1.147e-01                  6.444e-02                  2.085e-02  
+    dum_occ.administrator             dum_occ.artist             dum_occ.doctor  
+                6.942e-01                  1.401e-01                  5.213e-01  
+         dum_occ.educator           dum_occ.engineer      dum_occ.entertainment  
+                9.816e-01                  6.605e-01                  1.369e+00  
+        dum_occ.executive         dum_occ.healthcare          dum_occ.homemaker  
+               -4.614e-01                 -1.263e+00                  5.101e-01  
+           dum_occ.lawyer          dum_occ.librarian          dum_occ.marketing  
+                9.730e-01                  7.088e-01                  9.007e-01  
+             dum_occ.none              dum_occ.other         dum_occ.programmer  
+                1.387e+00                  9.364e-01                  6.820e-01  
+          dum_occ.retired           dum_occ.salesman          dum_occ.scientist  
+                7.286e-01                  9.490e-01                  5.339e-01  
+          dum_occ.student         dum_occ.technician  age:dum_occ.administrator  
+                9.896e-01                  9.035e-01                 -1.456e-02  
+       age:dum_occ.artist         age:dum_occ.doctor       age:dum_occ.educator  
+                5.738e-03                 -6.614e-03                 -2.104e-02  
+     age:dum_occ.engineer  age:dum_occ.entertainment      age:dum_occ.executive  
+               -1.462e-02                 -4.069e-02                  1.112e-02  
+   age:dum_occ.healthcare      age:dum_occ.homemaker         age:dum_occ.lawyer  
+                1.849e-02                 -1.681e-02                 -1.823e-02  
+    age:dum_occ.librarian      age:dum_occ.marketing           age:dum_occ.none  
+               -1.721e-02                 -2.367e-02                 -2.955e-02  
+        age:dum_occ.other     age:dum_occ.programmer        age:dum_occ.retired  
+               -2.260e-02                 -1.325e-02                 -1.949e-02  
+     age:dum_occ.salesman      age:dum_occ.scientist        age:dum_occ.student  
+               -2.208e-02                 -1.081e-02                 -2.567e-02  
+   age:dum_occ.technician  
+               -2.213e-02  
+> MAPE(res, u.big.tstY)
+[1] 0.8759136
+\end{verbatim}
+
+
+\paragraph{A.2.4 movienum+usernum+genre+age$*$occ(filtered)}
+\begin{verbatim}
+> ty <- lmout$coefficients[which(lmout$coefficients>0.1)]
+> ty
+          (Intercept)             Animation           Documentary                 Drama 
+            2.8709570             0.3160384             0.3287317             0.1934401 
+             FilmNoir                   War               Western dum_occ.administrator 
+            0.4129342             0.1877643             0.1146586             0.6941661 
+       dum_occ.artist        dum_occ.doctor      dum_occ.educator      dum_occ.engineer 
+            0.1401388             0.5212673             0.9816013             0.6605198 
+dum_occ.entertainment     dum_occ.homemaker        dum_occ.lawyer     dum_occ.librarian 
+            1.3692947             0.5100636             0.9730293             0.7088333 
+    dum_occ.marketing          dum_occ.none         dum_occ.other    dum_occ.programmer 
+            0.9006979             1.3874222             0.9364326             0.6820366 
+      dum_occ.retired      dum_occ.salesman     dum_occ.scientist       dum_occ.student 
+            0.7285785             0.9489834             0.5338967             0.9896029 
+   dum_occ.technician 
+            0.9035196
+> MAPE(res, u.big.tstY)
+[1] 0.9175987
+\end{verbatim}
+
+
+\paragraph{A.2.5 movienum+usernum+gender$*$occ}
+
+\begin{verbatim}
+Call:
+lm(formula = as.formula(indexToStr3(u.big, c(1, 2, 9:27), 28, 
+    c(29:48))), data = u.big.trn)
+Coefficients:
+                    (Intercept)                         movienum  
+                      3.404e+00                       -6.280e-04  
+                        usernum                          unknown  
+                     -5.953e-06                       -3.073e-01  
+                         Action                        Adventure  
+                     -1.390e-01                        6.260e-02  
+                      Animation                         Children  
+                      3.082e-01                       -2.727e-01  
+                         Comedy                            Crime  
+                     -1.173e-01                       -1.483e-02  
+                    Documentary                            Drama  
+                      3.411e-01                        1.980e-01  
+                        Fantasy                         FilmNoir  
+                     -7.536e-02                        4.177e-01  
+                         Horror                          Musical  
+                     -1.726e-01                        1.875e-02  
+                        Mystery                          Romance  
+                      9.533e-02                        9.008e-02  
+                          SciFi                         Thriller  
+                     -1.351e-02                       -8.723e-03  
+                            War                          Western  
+                      1.918e-01                        1.185e-01  
+                      dum_gen.F            dum_occ.administrator  
+                      5.136e-01                        3.615e-01  
+                 dum_occ.artist                   dum_occ.doctor  
+                      6.371e-01                        4.929e-01  
+               dum_occ.educator                 dum_occ.engineer  
+                      4.508e-01                        3.389e-01  
+          dum_occ.entertainment                dum_occ.executive  
+                      2.743e-01                        1.517e-01  
+             dum_occ.healthcare                dum_occ.homemaker  
+                      4.449e-01                        2.940e-01  
+                 dum_occ.lawyer                dum_occ.librarian  
+                      5.399e-01                        3.214e-01  
+              dum_occ.marketing                     dum_occ.none  
+                      2.674e-01                        7.805e-01  
+                  dum_occ.other               dum_occ.programmer  
+                      3.834e-01                        4.010e-01  
+                dum_occ.retired                 dum_occ.salesman  
+                      2.919e-01                        2.262e-01  
+              dum_occ.scientist                  dum_occ.student  
+                      3.845e-01                        3.322e-01  
+             dum_occ.technician  dum_gen.F:dum_occ.administrator  
+                      3.365e-01                       -3.213e-01  
+       dum_gen.F:dum_occ.artist         dum_gen.F:dum_occ.doctor  
+                     -9.638e-01                               NA  
+     dum_gen.F:dum_occ.educator       dum_gen.F:dum_occ.engineer  
+                     -4.925e-01                       -3.686e-01  
+dum_gen.F:dum_occ.entertainment      dum_gen.F:dum_occ.executive  
+                     -5.271e-01                       -9.148e-02  
+   dum_gen.F:dum_occ.healthcare      dum_gen.F:dum_occ.homemaker  
+                     -1.315e+00                       -6.567e-01  
+       dum_gen.F:dum_occ.lawyer      dum_gen.F:dum_occ.librarian  
+                     -6.624e-01                       -4.710e-01  
+    dum_gen.F:dum_occ.marketing           dum_gen.F:dum_occ.none  
+                     -4.660e-01                       -7.941e-01  
+        dum_gen.F:dum_occ.other     dum_gen.F:dum_occ.programmer  
+                     -5.624e-01                       -5.515e-01  
+      dum_gen.F:dum_occ.retired       dum_gen.F:dum_occ.salesman  
+                     -7.605e-01                       -7.597e-02  
+    dum_gen.F:dum_occ.scientist        dum_gen.F:dum_occ.student  
+                     -9.140e-01                       -3.829e-01  
+   dum_gen.F:dum_occ.technician  
+                     -7.121e-01  
+> MAPE(res, u.big.tstY)
+[1] 0.8788762
+\end{verbatim}
+
+\paragraph{A.2.6 movienum+usernum+gender$*$genre}
+
+\begin{verbatim}
+    Call:
+lm(formula = as.formula(indexToStr3(u.big, c(1, 2), 28, c(9:27))), 
+    data = u.big.trn)
+Coefficients:
+          (Intercept)               movienum                usernum              dum_gen.F  
+            3.771e+00             -6.598e-04             -3.415e-05              2.399e-02  
+              unknown                 Action              Adventure              Animation  
+           -3.673e-01             -1.420e-01              6.268e-02              3.331e-01  
+             Children                 Comedy                  Crime            Documentary  
+           -3.090e-01             -1.180e-01             -5.365e-03              3.198e-01  
+                Drama                Fantasy               FilmNoir                 Horror  
+            2.038e-01             -5.268e-02              4.587e-01             -1.612e-01  
+              Musical                Mystery                Romance                  SciFi  
+           -3.301e-03              1.199e-01              7.863e-02              9.563e-03  
+             Thriller                    War                Western      dum_gen.F:unknown  
+           -1.026e-02              2.068e-01              1.639e-01              2.535e-01  
+     dum_gen.F:Action    dum_gen.F:Adventure    dum_gen.F:Animation     dum_gen.F:Children  
+            7.405e-03              1.915e-02             -8.246e-02              1.240e-01  
+     dum_gen.F:Comedy        dum_gen.F:Crime  dum_gen.F:Documentary        dum_gen.F:Drama  
+            1.099e-02             -7.022e-02             -3.006e-03             -2.819e-02  
+    dum_gen.F:Fantasy     dum_gen.F:FilmNoir       dum_gen.F:Horror      dum_gen.F:Musical  
+           -3.886e-02             -1.571e-01             -6.662e-02              1.077e-01  
+    dum_gen.F:Mystery      dum_gen.F:Romance        dum_gen.F:SciFi     dum_gen.F:Thriller  
+           -8.023e-02              6.477e-02             -1.221e-01             -1.973e-03  
+        dum_gen.F:War      dum_gen.F:Western  
+           -5.603e-02             -2.185e-01  
+> res <- predict(lmout, u.big.tstX)
+> MAPE(res, u.big.tstY)
+[1] 0.8899131
+\end{verbatim}
+
+
+\paragraph{A.2.7 movienum+usernum+age$*$genre}
+
+\begin{verbatim}
+    Call:
+lm(formula = as.formula(indexToStr3(u.big, c(1, 2), 5, c(9:27))), 
+    data = u.big.trn)
+Coefficients:
+    (Intercept)         movienum          usernum              age          unknown  
+      3.557e+00       -6.552e-04       -2.046e-05        6.379e-03        1.135e+00  
+         Action        Adventure        Animation         Children           Comedy  
+     -6.392e-02        5.818e-02        4.540e-01       -1.426e-01       -8.473e-02  
+          Crime      Documentary            Drama          Fantasy         FilmNoir  
+      1.130e-01        5.600e-01        2.625e-01       -4.631e-01        2.540e-01  
+         Horror          Musical          Mystery          Romance            SciFi  
+      6.176e-02       -1.039e-02       -5.750e-02        2.328e-01        1.063e-01  
+       Thriller              War          Western      age:unknown       age:Action  
+      1.298e-02        1.027e-01       -1.573e-01       -5.160e-02       -2.170e-03  
+  age:Adventure    age:Animation     age:Children       age:Comedy        age:Crime  
+      1.848e-04       -4.454e-03       -3.740e-03       -8.154e-04       -4.027e-03  
+age:Documentary        age:Drama      age:Fantasy     age:FilmNoir       age:Horror  
+     -7.195e-03       -2.092e-03        1.222e-02        4.365e-03       -7.406e-03  
+    age:Musical      age:Mystery      age:Romance        age:SciFi     age:Thriller  
+      1.001e-03        4.413e-03       -4.045e-03       -3.641e-03       -6.871e-04  
+        age:War      age:Western  
+      2.436e-03        8.033e-03  
+> res <- predict(lmout, u.big.tstX)
+> MAPE(res, u.big.tstY)
+[1] 0.8894089
+\end{verbatim}
+
+\paragraph{A.2.8 movienum+usernum+age*occ+gender*genre}
+
+\begin{verbatim}
+Call:
+lm(formula = ttt, data = u.big.trn)
+Coefficients:
+              (Intercept)                   movienum                    usernum  
+                2.860e+00                 -6.183e-04                 -1.977e-05  
+                      age      dum_occ.administrator             dum_occ.artist  
+                2.083e-02                  6.956e-01                  1.450e-01  
+           dum_occ.doctor           dum_occ.educator           dum_occ.engineer  
+                5.249e-01                  9.832e-01                  6.602e-01  
+    dum_occ.entertainment          dum_occ.executive         dum_occ.healthcare  
+                1.366e+00                 -4.587e-01                 -1.268e+00  
+        dum_occ.homemaker             dum_occ.lawyer          dum_occ.librarian  
+                4.836e-01                  9.787e-01                  7.098e-01  
+        dum_occ.marketing               dum_occ.none              dum_occ.other  
+                8.885e-01                  1.389e+00                  9.342e-01  
+       dum_occ.programmer            dum_occ.retired           dum_occ.salesman  
+                6.835e-01                  7.322e-01                  9.634e-01  
+        dum_occ.scientist            dum_occ.student         dum_occ.technician  
+                5.363e-01                  9.829e-01                  9.061e-01  
+                dum_gen.F                    unknown                     Action  
+                1.025e-01                 -3.156e-01                 -1.366e-01  
+                Adventure                  Animation                   Children  
+                6.279e-02                  3.425e-01                 -3.107e-01  
+                   Comedy                      Crime                Documentary  
+               -1.174e-01                  4.868e-03                  3.142e-01  
+                    Drama                    Fantasy                   FilmNoir  
+                2.055e-01                 -5.855e-02                  4.448e-01  
+                   Horror                    Musical                    Mystery  
+               -1.489e-01                 -6.519e-03                  1.158e-01  
+                  Romance                      SciFi                   Thriller  
+                7.795e-02                  1.866e-02                 -2.858e-03  
+                      War                    Western  age:dum_occ.administrator  
+                2.037e-01                  1.564e-01                 -1.453e-02  
+       age:dum_occ.artist         age:dum_occ.doctor       age:dum_occ.educator  
+                5.697e-03                 -6.617e-03                 -2.102e-02  
+     age:dum_occ.engineer  age:dum_occ.entertainment      age:dum_occ.executive  
+               -1.454e-02                 -4.054e-02                  1.112e-02  
+   age:dum_occ.healthcare      age:dum_occ.homemaker         age:dum_occ.lawyer  
+                1.868e-02                 -1.599e-02                 -1.830e-02  
+    age:dum_occ.librarian      age:dum_occ.marketing           age:dum_occ.none  
+               -1.716e-02                 -2.328e-02                 -2.947e-02  
+        age:dum_occ.other     age:dum_occ.programmer        age:dum_occ.retired  
+               -2.248e-02                 -1.319e-02                 -1.948e-02  
+     age:dum_occ.salesman      age:dum_occ.scientist        age:dum_occ.student  
+               -2.236e-02                 -1.086e-02                 -2.536e-02  
+   age:dum_occ.technician          dum_gen.F:unknown           dum_gen.F:Action  
+               -2.217e-02                  9.225e-02                  5.008e-03  
+      dum_gen.F:Adventure        dum_gen.F:Animation         dum_gen.F:Children  
+                1.409e-02                 -8.932e-02                  1.446e-01  
+         dum_gen.F:Comedy            dum_gen.F:Crime      dum_gen.F:Documentary  
+               -4.332e-03                 -8.323e-02                  6.643e-02  
+          dum_gen.F:Drama          dum_gen.F:Fantasy         dum_gen.F:FilmNoir  
+               -4.228e-02                 -2.829e-02                 -1.460e-01  
+         dum_gen.F:Horror          dum_gen.F:Musical          dum_gen.F:Mystery  
+               -4.064e-02                  7.797e-02                 -1.005e-01  
+        dum_gen.F:Romance            dum_gen.F:SciFi         dum_gen.F:Thriller  
+                4.069e-02                 -1.342e-01                 -2.011e-02  
+            dum_gen.F:War          dum_gen.F:Western  
+               -6.164e-02                 -1.941e-01
+             
+> MAPE(res, u.big.tstY)
+[1] 0.874702
+\end{verbatim}
+
+\paragraph{A.2.9 movienum+usernum+age*genre+gender*occ}
+
+\begin{verbatim}
+Call:
+lm(formula = ttt, data = u.big.trn)
+Coefficients:
+                    (Intercept)                         movienum  
+                      3.100e+00                       -6.234e-04  
+                        usernum                        dum_gen.F  
+                      2.257e-06                        4.805e-01  
+          dum_occ.administrator                   dum_occ.artist  
+                      3.160e-01                        6.314e-01  
+                 dum_occ.doctor                 dum_occ.educator  
+                      4.720e-01                        3.755e-01  
+               dum_occ.engineer            dum_occ.entertainment  
+                      3.257e-01                        2.960e-01  
+              dum_occ.executive               dum_occ.healthcare  
+                      1.273e-01                        3.667e-01  
+              dum_occ.homemaker                   dum_occ.lawyer  
+                      3.437e-01                        5.277e-01  
+              dum_occ.librarian                dum_occ.marketing  
+                      2.869e-01                        2.336e-01  
+                   dum_occ.none                    dum_occ.other  
+                      8.583e-01                        3.775e-01  
+             dum_occ.programmer                  dum_occ.retired  
+                      3.990e-01                        1.081e-01  
+               dum_occ.salesman                dum_occ.scientist  
+                      2.116e-01                        3.643e-01  
+                dum_occ.student               dum_occ.technician  
+                      3.891e-01                        3.420e-01  
+                            age                          unknown  
+                      9.123e-03                        7.811e-01  
+                         Action                        Adventure  
+                     -6.955e-02                        5.086e-02  
+                      Animation                         Children  
+                      4.560e-01                       -1.753e-01  
+                         Comedy                            Crime  
+                     -9.557e-02                        1.202e-01  
+                    Documentary                            Drama  
+                      6.288e-01                        2.626e-01  
+                        Fantasy                         FilmNoir  
+                     -4.676e-01                        2.813e-01  
+                         Horror                          Musical  
+                      8.428e-02                       -1.437e-02  
+                        Mystery                          Romance  
+                     -5.170e-02                        2.232e-01  
+                          SciFi                         Thriller  
+                      1.111e-01                        3.831e-03  
+                            War                          Western  
+                      1.197e-01                       -1.149e-01  
+dum_gen.F:dum_occ.administrator         dum_gen.F:dum_occ.artist  
+                     -2.767e-01                       -8.941e-01  
+       dum_gen.F:dum_occ.doctor       dum_gen.F:dum_occ.educator  
+                             NA                       -4.182e-01  
+     dum_gen.F:dum_occ.engineer  dum_gen.F:dum_occ.entertainment  
+                     -3.298e-01                       -4.860e-01  
+    dum_gen.F:dum_occ.executive     dum_gen.F:dum_occ.healthcare  
+                     -9.964e-02                       -1.237e+00  
+    dum_gen.F:dum_occ.homemaker         dum_gen.F:dum_occ.lawyer  
+                     -6.811e-01                       -6.284e-01  
+    dum_gen.F:dum_occ.librarian      dum_gen.F:dum_occ.marketing  
+                     -4.304e-01                       -3.965e-01  
+         dum_gen.F:dum_occ.none          dum_gen.F:dum_occ.other  
+                     -8.475e-01                       -5.198e-01  
+   dum_gen.F:dum_occ.programmer        dum_gen.F:dum_occ.retired  
+                     -5.128e-01                       -7.796e-01  
+     dum_gen.F:dum_occ.salesman      dum_gen.F:dum_occ.scientist  
+                     -2.314e-02                       -8.402e-01  
+      dum_gen.F:dum_occ.student     dum_gen.F:dum_occ.technician  
+                     -3.419e-01                       -7.240e-01  
+                    age:unknown                       age:Action  
+                     -3.823e-02                       -1.954e-03  
+                  age:Adventure                    age:Animation  
+                      2.885e-04                       -4.522e-03  
+                   age:Children                       age:Comedy  
+                     -2.856e-03                       -5.350e-04  
+                      age:Crime                  age:Documentary  
+                     -4.027e-03                       -8.413e-03  
+                      age:Drama                      age:Fantasy  
+                     -2.018e-03                        1.217e-02  
+                   age:FilmNoir                       age:Horror  
+                      3.433e-03                       -7.941e-03  
+                    age:Musical                      age:Mystery  
+                      9.112e-04                        4.129e-03  
+                    age:Romance                        age:SciFi  
+                     -4.009e-03                       -3.717e-03  
+                   age:Thriller                          age:War  
+                     -3.141e-04                        1.946e-03  
+                    age:Western  
+                      6.771e-03    
+> res <- predict(lmout, u.big.tstX)
+> MAPE(res, u.big.tstY)
+[1] 0.8766665
+\end{verbatim}
+
+\paragraph{A.2.10 movienum+usernum+age*genre+gender*occ(filtered)}
+\begin{verbatim}
+Call:
+lm(formula = as.formula(indexToStr4(tmp1)), data = u.big.trn)
+Coefficients:
+          (Intercept)               movienum                usernum                    age
+            3.137e+00             -6.179e-04             -6.961e-06              6.519e-03
+            dum_gen.F  dum_occ.administrator         dum_occ.artist         dum_occ.doctor
+            4.693e-02              3.148e-01              3.864e-01              4.282e-01
+     dum_occ.educator       dum_occ.engineer  dum_occ.entertainment      dum_occ.homemaker
+            3.251e-01              2.672e-01              2.317e-01              6.143e-02
+       dum_occ.lawyer      dum_occ.librarian      dum_occ.marketing           dum_occ.none
+            4.603e-01              2.406e-01              1.842e-01              6.319e-01
+        dum_occ.other     dum_occ.programmer        dum_occ.retired       dum_occ.salesman
+            2.923e-01              3.331e-01              3.315e-02              3.145e-01
+    dum_occ.scientist        dum_occ.student     dum_occ.technician              Animation
+            2.828e-01              3.581e-01              2.743e-01              1.853e-01
+          Documentary                  Drama               FilmNoir                Mystery
+            4.143e-01              2.784e-01              4.887e-01              1.268e-01
+                  War                Western     dum_gen.F:Children
+            2.126e-01              1.091e-01             -5.541e-02
+> res <- predict(lmout, u.big.tstX)
+> MAPE(res, u.big.tstY)
+[1] 0.8879195
+\end{verbatim}
 \end{document}
