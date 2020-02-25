@@ -571,7 +571,7 @@ F-statistic: 230.9 on 134 and 94865 DF,  p-value: < 2.2e-16
 [1] 0.7416
 
 \end{verbatim}
-\section{nmf model}
+\section{Nmf Model}
 \tab{}In the nmf model, we input usernum, movienum, and rating as the input of the training set of the recosystem()'s \$train() function.
 \\*
 \subsection{default}
@@ -606,7 +606,7 @@ iter      tr_rmse          obj
 \\*
 \tab{}The MAPE() result for the nmf model is 0.7329318, which is not really "bad" consider it is already lower than our best lm model.
 
-\subsection{dim}
+\subsection{Dim}
 \tab{}To inrease the accuracy, we first tried different \textbf{\underline{dim}}, and see how the MAPE() result changed. We noticed that there would be an "optimal" number within a region, like a "local" optimize point so the result would be the lowest. After tested different dim under multiple distinct interval and considered the rule of thumb that $p << \sqrt{n}$, we choose dim=25:
 \\*
 \begin{verbatim}
@@ -638,7 +638,7 @@ iter      tr_rmse          obj
 \end{verbatim}
 This improve the MAPE() result for 0.01 compared to the default one.
 
-\subsection{niter}
+\subsection{Niter}
 \tab{}Then, we tried different \textbf{\underline{niter}} since we discover the accuracy will increase as this parameter increase. But there is a asymptomatic ceiling for this parameter, which the improvement would not be noticeable or even could decrease the accuracy if we keep increasing it. Thus, after we played around with it, we set niter=80 as it improve our result for another 0.01.
 \begin{verbatim}
     ty$train(trnst, opts = list(dim = 25, niter= 80, nmf = TRUE))
@@ -680,10 +680,8 @@ iter      tr_rmse          obj
 [1] 0.7139921
 \end{verbatim}
 \tab{}Until this point, our nmf model's MAPE() result is 0.7139921 which improve by 0.018 compares to the original model with default tuning parameter. 
-\\*
-\subsection{lrate}
 
-
+\subsection{Lrate}
 \tab{}p.s. After Monday's lecture that discussed about the letter, we've done some search on the learning rate which is the step size between each iteration. We believe that the lrate parameter has the potential to further improve our model's accuracy.
 \begin{verbatim}
     ty$train(trnst, opts = list(dim = 25, niter= 80, lrate = 0.13, nmf = TRUE))
@@ -729,14 +727,15 @@ iter      tr_rmse          obj
 \subsection{Some other attempts}
 \tab{}In addition, we also tried plugging in different predictors to user\_index and item\_index to see what happens to the predicting results. But the accuracy of the combinations we have tested are all worse than the original one with usernum and movienum. We think that since we are predicting existing users and movies, movienum and usernum should be the most dominant predictor in this model. Thus, we still stick to our previous best model.
 
-\subsection{Final nmf Model}
+\subsection{Final Nmf Model}
 \tab{}Combining all these tuning parameters we've tried, our final model was yield with opts = list(dim = 25, niter= 80, lrate = 0.13, nmf = TRUE), and this gave us 0.7130311 in the MAPE() result, and it's 0.02 better in accuracy than the original default model.
 
 
 \section{Appendix}
-\subsection{Helper functions}
-\subsection{Other lm models attempted}
-\subsubsection{Ex-model1(Age$*$occ)}
+\subsection{Helper Functions}
+\subsection{Other Lm Models Attempted}
+\subsubsection{Ex-model1}
+\textbf{\underline{(Age$*$occ)}}
 \begin{verbatim}
 Call:
 lm(formula = rating ~ age * occ, data = u.big.trn)
@@ -765,7 +764,8 @@ Coefficients:
           -0.0079412             0.0168032  
 \end{verbatim}
 
-\subsubsection{Ex-model2(Age$*$Gender)}
+\subsubsection{Ex-model2}
+\textbf{\underline{(Age$*$Gender)}}
 \begin{verbatim}
 Call:
 lm(formula = rating ~ age * dum_gen.F, data = u.big.trn)
@@ -774,7 +774,8 @@ Coefficients:
     3.3512072      0.0053591      0.0303178     -0.0007553 
 \end{verbatim}
 
-\subsubsection{Ex-model3(movienum+usernum+genre+age$*$occ)}
+\subsubsection{Ex-model3}
+\textbf{\underline{(movienum+usernum+genre+age$*$occ)}}
 \begin{verbatim}
     Call:
 lm(formula = as.formula(indexToStr3(u.big, c(1, 2, 9:28), 5, 
@@ -828,7 +829,8 @@ Coefficients:
 [1] 0.8759136
 \end{verbatim}
 
-\subsubsection{Ex-model4(movienum+usernum+genre+age$*$occ(filtered))}
+\subsubsection{Ex-model4}
+\textbf{\underline{(movienum+usernum+genre+age$*$occ(filtered))}}
 \begin{verbatim}
 > ty <- lmout$coefficients[which(lmout$coefficients>0.1)]
 > ty
@@ -851,7 +853,8 @@ dum_occ.entertainment     dum_occ.homemaker        dum_occ.lawyer     dum_occ.li
 \end{verbatim}
 
 
-\subsubsection{Ex-model5(movienum+usernum+gender$*$occ)}
+\subsubsection{Ex-model5}
+\textbf{\underline{(movienum+usernum+gender$*$occ)}}
 \begin{verbatim}
 Call:
 lm(formula = as.formula(indexToStr3(u.big, c(1, 2, 9:27), 28, 
@@ -925,7 +928,8 @@ dum_gen.F:dum_occ.entertainment      dum_gen.F:dum_occ.executive
 [1] 0.8788762
 \end{verbatim}
 
-\subsubsection{Ex-model6(movienum+usernum+gender$*$genre)}
+\subsubsection{Ex-model6}
+\textbf{\underline{(movienum+usernum+gender$*$genre)}}
 \begin{verbatim}
     Call:
 lm(formula = as.formula(indexToStr3(u.big, c(1, 2), 28, c(9:27))), 
@@ -958,7 +962,8 @@ Coefficients:
 [1] 0.8899131
 \end{verbatim}
 
-\subsubsection{Ex-model7(movienum+usernum+age$*$genre)}
+\subsubsection{Ex-model7}
+\textbf{\underline{(movienum+usernum+age$*$genre)}}
 \begin{verbatim}
     Call:
 lm(formula = as.formula(indexToStr3(u.big, c(1, 2), 5, c(9:27))), 
@@ -987,7 +992,8 @@ age:Documentary        age:Drama      age:Fantasy     age:FilmNoir       age:Hor
 [1] 0.8894089
 \end{verbatim}
 
-\subsubsection{Ex-model8(movienum+usernum+age*occ+gender*genre)}
+\subsubsection{Ex-model8}
+\textbf{\underline{(movienum+usernum+age*occ+gender*genre)}}
 \begin{verbatim}
 Call:
 lm(formula = ttt, data = u.big.trn)
@@ -1053,7 +1059,8 @@ Coefficients:
 [1] 0.874702
 \end{verbatim}
 
-\subsubsection{Ex-model9(movienum+usernum+age*genre+gender*occ)}
+\subsubsection{Ex-model9}
+\textbf{\underline{(movienum+usernum+age*genre+gender*occ)}}
 \begin{verbatim}
 Call:
 lm(formula = ttt, data = u.big.trn)
@@ -1147,7 +1154,8 @@ dum_gen.F:dum_occ.administrator         dum_gen.F:dum_occ.artist
 [1] 0.8766665
 \end{verbatim}
 
-\subsubsection{Ex-model10(movienum+usernum+age*genre+gender*occ(filtered))}
+\subsubsection{Ex-model10}
+\textbf{\underline{(movienum+usernum+age*genre+gender*occ(filtered))}}
 \begin{verbatim}
 Call:
 lm(formula = as.formula(indexToStr4(tmp1)), data = u.big.trn)
@@ -1173,8 +1181,8 @@ Coefficients:
 [1] 0.8879195
 \end{verbatim}
 
-\subsubsection{Ex-model11(movienum+usernum+genre+age*transID)}
-
+\subsubsection{Ex-model11}
+\textbf{\underline{(movienum+usernum+genre+age*transID)}}
 \begin{verbatim}
 Call:
 lm(formula = paste(indexToStr(u.big, c(1, 2, 9:27)), "+age*transID"),
@@ -1222,8 +1230,8 @@ F-statistic: 295.1 on 24 and 99975 DF,  p-value: < 2.2e-16
 \end{verbatim}
 
 
-\subsubsection{Ex-model12(movienum+usernum+age+gender+ZIP+genre)}
-
+\subsubsection{Ex-model12}
+\textbf{\underline{(movienum+usernum+age+gender+ZIP+genre)}}
 \begin{verbatim}
 Call:
 lm(formula = indexToStr(u.big, c(1, 2, 5, 6, 8, 9:27)), data = u.big)
