@@ -581,7 +581,9 @@ F-statistic: 230.9 on 134 and 94865 DF,  p-value: < 2.2e-16
 \\*
 \tab{}At last, our final nmf model's MAPE() result is 0.7139921 which improve by 0.02 compares to the original model with default tuning parameter.
 \\*
-\tab{}In addition, we also tried plugging in different predictors to user\_index and item\_index to see what happens to the predicting results. But the accuracy of the combinations we have tested are all worse than the original one with usernum and movienum. Thus, we still stick to our previous best model.
+\tab{}In addition, we also tried plugging in different predictors to user\_index and item\_index to see what happens to the predicting results. But the accuracy of the combinations we have tested are all worse than the original one with usernum and movienum. We think that since we are predicting existing users and movies, movienum and usernum should be the most dominant predictor in this model. Thus, we still stick to our previous best model.
+\\*
+\tab{}p.s. After Monday's lecture that discussed about the letter, we've done some search on the learning rate which is the step size between each iteration. We believe that the lrate parameter has the potential to further improve our model's accuracy. Indeed, it turns out that the MAPE() result become 0.7130311. which is 0.001 better than our previous model with lrate default to 0.1.
 
 
 
