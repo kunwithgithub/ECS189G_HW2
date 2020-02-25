@@ -12,7 +12,7 @@ test <-function(u.big, predictors){
   
   # test
   lmout <- lm(as.formula(indexToStr(u.big,predictors)), data=u.big.trn)
-  print(lmout)
+  print(summary(lmout))
   res <- predict(lmout,u.big.tstX)
   res <- roundToNearestInt(res)
   print(MAPE(res, u.big.tstY))
@@ -35,6 +35,8 @@ xin_lm1 <- function(u.big){
   AgeGender <- u.big$G.F * u.big$age
   u.big <- cbind(u.big, AgeGender)
   test(u.big, c(5,9:29))
+  test(u.big, c(5,28:29))
+  test(u.big, c(9:27))
 }
 
 # delete predictors: age/Action/Adventure/Comedy/Crime/Musical/Thriller/G.F/AgeGender
@@ -61,8 +63,10 @@ xin_lm2 <- function(u.big){
   occs <- factorToDummies(u.big$occ, "occ")
   u.big <- cbind(u.big, occs)
   cols <- ncol(u.big)
-  test(u.big, c(9,12,13,16:20,22:24))
+  test(u.big, c(9,12,13,16:20,22:24, 26:27))
   test(u.big, c(9,12,13,16:20,22:24,26:cols))
+  test(u.big, c(28:cols))
+  test(u.big, c(9,12,13,16:20,22:24,35,40))
 }
 
 # delete predictors: only keep occ.healthcare/occ.none
@@ -121,6 +125,7 @@ xin_lm3 <- function(u.big){
   cols <- ncol(u.big)
   test(u.big, c(9,12,13,16:20,22:24,26:27,35,40))
   test(u.big, c(9,12,13,16:20,22:24,26:27,35,40,48:cols))
+  test(u.big, c(48:cols))
 }
 
 # delete predictors:
@@ -193,14 +198,14 @@ occ_genres <- function(u.big, genre_col) {
     average_rate <- mean(occX$rating)
     if(is.na(average_rate))
       average_rate <- 0
-    res[i,1] <- i
+    res[i,1] <- levels[i]
     res[i,2] <- average_rate
     res[i,3] <- nrow(occX)
   }
   res <- as.data.frame(res)
   names(res) <- c("occ","rating","sample_size")
   print(res)
-  p <- ggplot(data = res, aes(x=occ, y=rating)) + geom_point()
+  p <- ggplot(data = res, aes(x=occ, y=rating)) + geom_bar(stat = "identity") + ylab("Average Rating for Comeday")
   print(p)
 }
 
@@ -289,13 +294,6 @@ xin_lm7 <- function(u.big) {
   writer_SciFi <- u.big$occ.writer * u.big$SciFi
   writer_action <- u.big$occ.writer * u.big$Action
   high_degree_occ <- u.big$occ.administrator + u.big$occ.artist + u.big$occ.doctor + u.big$occ.educator + u.big$occ.lawyer
-  #occ_drama <- first_four * u.big$Drama
-  #executive_documentary <- u.big$occ.executive * u.big$Documentary
-  #age_western <- u.big$age * u.big$Western
-  #age_war <- u.big$age * u.big$War
-  #age_thriller <- u.big$age * u.big$Thriller
-  #age_mystery <- u.big$age * u.big$Mystery
-  #age_horror <- u.big$age * u.big$Horror
   u.big <- cbind(u.big, executive_comedy, occ_mystrery, artist_SciFi, writer_SciFi, writer_action, high_degree_occ)
   u.big <- merge(u.big, res, by = "movienum", all.x = TRUE)
   test(u.big, c(9,12,13,16:20,22:24,26:27,35,40,49:ncol(u.big)))
@@ -351,18 +349,13 @@ xin_lm8 <- function(u.big){
   first_four <- u.big$occ.administrator + u.big$occ.artist + u.big$occ.doctor + u.big$occ.educator
   executive_comedy <- u.big$occ.executive * u.big$Comedy
   occ_mystrery <- first_four*u.big$Mystery
+  student_mystrery <- u.big$occ.student * u.big$Mystery
+  student_action <- u.big$occ.student * u.big$Action
   artist_SciFi <- u.big$occ.artist * u.big$SciFi
   writer_SciFi <- u.big$occ.writer * u.big$SciFi
   writer_action <- u.big$occ.writer * u.big$Action
   high_degree_occ <- u.big$occ.administrator + u.big$occ.artist + u.big$occ.doctor + u.big$occ.educator + u.big$occ.lawyer
-  #occ_drama <- first_four * u.big$Drama
-  #executive_documentary <- u.big$occ.executive * u.big$Documentary
-  #age_western <- u.big$age * u.big$Western
-  #age_war <- u.big$age * u.big$War
-  #age_thriller <- u.big$age * u.big$Thriller
-  #age_mystery <- u.big$age * u.big$Mystery
-  #age_horror <- u.big$age * u.big$Horror
-  u.big <- cbind(u.big, executive_comedy, occ_mystrery, artist_SciFi, writer_SciFi, writer_action)
+  u.big <- cbind(u.big, executive_comedy, student_mystrery, artist_SciFi, writer_SciFi, writer_action)
   u.big <- merge(u.big, mov, by = "movienum", all.x = TRUE)
   u.big <- merge(u.big, usr, by = "usernum", all.x = TRUE)
   test(u.big, c(9,12,13,16:20,22:24,26:27,35,40,49:ncol(u.big)))

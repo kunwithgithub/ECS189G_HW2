@@ -92,10 +92,11 @@ code we used:
   u.big <- merge(u.big, usr, by = "usernum", all.x = TRUE)
 \end{verbatim}
 
-We did this because some users are just harsher than others, and 
-they tend to give relative low ratings for movies they have seen.
-Other users are just "nicer" than the ordinary, and they tend to
-give relative high ratings for movies.
+We did this based on the assumption that some users are just 
+harsher than others, and they tend to give relative low ratings for 
+movies they have seen. Also, some users are just more lenient than 
+the ordinary, and they tend to give relative high ratings for 
+movies.
 
 \subsection{Genres}
 Different kinds of movies should affect their ratings. Our first 
@@ -140,6 +141,49 @@ F-statistic:   156 on 19 and 94980 DF,  p-value: < 2.2e-16
 [1] 0.8778 # MAPE
 \end{verbatim}
 
+We can see from the above that not all genres has a great impact on
+users' ratings. For example: the coefficient of "Action" movie is 
+only $-0.0859$, meaning that whether a movie is action or not will
+not affect people's ratings very much. Therefore, we could safely 
+remove some genres from our predictors while preserving the 
+accuracy of our predictions. Below are all the genres we 
+included in our final lm model.
+\begin{verbatim}
+Call:
+lm(formula = as.formula(indexToStr(u.big, predictors)), data = u.big.trn)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.1460 -0.6262  0.2683  0.6501  2.0426 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  3.349864   0.006310 530.882  < 2e-16 ***
+unknown     -0.238753   0.369962  -0.645    0.519    
+Animation    0.377991   0.023603  16.015  < 2e-16 ***
+Children    -0.188422   0.017653 -10.673  < 2e-16 ***
+Documentary  0.282196   0.041782   6.754 1.45e-11 ***
+Drama        0.276385   0.007848  35.218  < 2e-16 ***
+Fantasy     -0.204048   0.032897  -6.203 5.58e-10 ***
+FilmNoir     0.457673   0.028405  16.112  < 2e-16 ***
+Horror      -0.117394   0.016462  -7.131 1.00e-12 ***
+Mystery      0.140822   0.016722   8.421  < 2e-16 ***
+Romance      0.105400   0.009358  11.263  < 2e-16 ***
+SciFi        0.098830   0.011449   8.632  < 2e-16 ***
+War          0.245364   0.012829  19.126  < 2e-16 ***
+Western      0.169018   0.027010   6.258 3.93e-10 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 1.11 on 94986 degrees of freedom
+Multiple R-squared:  0.0285,	Adjusted R-squared:  0.02837 
+F-statistic: 214.4 on 13 and 94986 DF,  p-value: < 2.2e-16
+
+[1] 0.8778 # MAPE
+\end{verbatim}
+
+We found that even if we remove 6 different genres from our 
+predictors, MAPE does not change.
 
 \subsection{Occupations}
 Our intuition to predicting ratings is based on factors that fundamentally represent the user's
@@ -154,9 +198,86 @@ or leniently a user rates their movies, based on their user ID.
 \end{center}
 \end{figure}
 
-Intuitively, occupation reflects a person's personality. We plotted the average rating given by
-each occupation. As shown in the plot, the ratings are not very uniform, which would probably
-make Occupation a good feature to predict ratings. Since age likely affects
+Intuitively, occupation reflects a person's personality. We plotted 
+the average rating given by each occupation. As shown in the plot, 
+the ratings are not very uniform, which would probably make 
+Occupation a good feature to predict ratings. 
+Our first attempt is simply using all occupations as our 
+predictors. Here is the result.
+\begin{verbatim}
+Call:
+lm(formula = as.formula(indexToStr(u.big, predictors)), data = u.big.trn)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.7801 -0.5709  0.3527  0.5637  2.1075 
+
+Coefficients:
+                  Estimate Std. Error t value Pr(>|t|)    
+(Intercept)        3.37842    0.01541 219.192  < 2e-16 ***
+occ.administrator  0.25732    0.02034  12.649  < 2e-16 ***
+occ.artist         0.26887    0.02836   9.480  < 2e-16 ***
+occ.doctor         0.29994    0.05169   5.803 6.54e-09 ***
+occ.educator       0.28936    0.01941  14.911  < 2e-16 ***
+occ.engineer       0.16349    0.01995   8.194 2.56e-16 ***
+occ.entertainment  0.05785    0.02944   1.965  0.04941 *  
+occ.executive     -0.04073    0.02503  -1.627  0.10370    
+occ.healthcare    -0.48588    0.02655 -18.299  < 2e-16 ***
+occ.homemaker     -0.09729    0.06842  -1.422  0.15505    
+occ.lawyer         0.36098    0.03489  10.345  < 2e-16 ***
+occ.librarian      0.18277    0.02206   8.283  < 2e-16 ***
+occ.marketing      0.10166    0.03016   3.371  0.00075 ***
+occ.none           0.40169    0.04121   9.748  < 2e-16 ***
+occ.other          0.16639    0.01899   8.763  < 2e-16 ***
+occ.programmer     0.19248    0.02016   9.548  < 2e-16 ***
+occ.retired        0.09592    0.03254   2.947  0.00321 ** 
+occ.salesman       0.20450    0.04222   4.843 1.28e-06 ***
+occ.scientist      0.23405    0.02960   7.908 2.64e-15 ***
+occ.student        0.13405    0.01724   7.774 7.70e-15 ***
+occ.technician     0.15457    0.02474   6.248 4.18e-10 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 1.117 on 94979 degrees of freedom
+Multiple R-squared:  0.01505,	Adjusted R-squared:  0.01484 
+F-statistic: 72.55 on 20 and 94979 DF,  p-value: < 2.2e-16
+
+[1] 0.8798 # MAPE
+\end{verbatim}
+
+Comparing this with Figure 1, we believe that ratings given by 
+people of different occupations are around the same. But there are
+two special cases. First, healthcare workers tend to give relative
+low ratings compared to other occupations. Second, people whose 
+occupation is none tend to give relative high ratings. Therefore,
+the only two occupations we used as predictors are "healthcare" and
+"none." Below is the result.
+\begin{verbatim}
+Call:
+lm(formula = as.formula(indexToStr(u.big, predictors)), data = u.big.trn)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.7801 -0.5441  0.4559  0.4559  2.1075 
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)     3.544111   0.003704 956.716  < 2e-16 ***
+occ.healthcare -0.651561   0.021993 -29.626  < 2e-16 ***
+occ.none        0.236006   0.038496   6.131 8.78e-10 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 1.12 on 94997 degrees of freedom
+Multiple R-squared:  0.009606,	Adjusted R-squared:  0.009585 
+F-statistic: 460.7 on 2 and 94997 DF,  p-value: < 2.2e-16
+
+[1] 0.8694 # MAPE
+\end{verbatim}
+We could see that using these two occupations as our predictors 
+actually improves our result.
+ 
+Since age likely affects
 the kind of occupation a person has, we decided to use the interaction term `age` and `occ` to predicting
 ratings. The MAPE obtained from this set of features is 0.8752.
 
@@ -222,6 +343,230 @@ ratings. The MAPE obtained from this set of features is 0.8752.
     Residual standard error: 1.109 on 94958 degrees of freedom
     Multiple R-squared:  0.02956,   Adjusted R-squared:  0.02914 
     F-statistic: 70.54 on 41 and 94958 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\subsection{ZIP Code}
+ZIP codes reflect the location of users. It is potentially reflect
+the personality of users, which further affect their ratings. 
+Therefore, we take first two digits of ZIP codes, make it into 
+factor variables, call factorToDummies function to convert it 
+into dummy variables, and use all of them as our predictors. The result MAPE is 0.8978.
+
+\subsection{Interaction Terms}
+We also explore some interaction terms. We think people of 
+different occupations might have different preference for movies.
+For example, artists might prefer drama and musical, and technician
+might prefer science fiction. Therefoer, using interaction terms 
+of occupations and genres might help us improve the accuracy of 
+our prediction.
+
+\clearpage
+The first interaction term we include is $\textbf{executive} * \textbf{comedy}$.
+\begin{figure}[ht!]
+\begin{center}
+\includegraphics[width=\textwidth]{comedy_occ.png}
+\caption{Average Rating for Comedy vs. Occupations}
+\end{center}
+\end{figure}
+
+From the above plot, we find that executives tend to give low 
+ratings for comedy. Therefore, we want to use $\textbf{executive} * \textbf{comedy}$ as 
+one of interaction terms in our lm model.
+
+The second interaction term we include is $\textbf{student} * \textbf{mystery}$.
+\begin{figure}[ht!]
+\begin{center}
+\includegraphics[width=\textwidth]{mystrey_student.png}
+\caption{Average Rating for Mystery vs. Occupations}
+\end{center}
+\end{figure}
+
+From the above plot, we find that students tend to give low 
+ratings for mystery. Therefore, we want to use $\textbf{student} * \textbf{mystery}$ as one of interaction terms in our lm model.
+\clearpage
+
+Other interaction terms we include are $\textbf{artist} * \textbf{Sci-Fi}$ and $\textbf{writer} * \textbf{Sci-Fi}$.
+\begin{figure}[ht!]
+\begin{center}
+\includegraphics[width=\textwidth]{sci_fi.png}
+\caption{Average Rating for Sci-Fi vs. Occupations}
+\end{center}
+\end{figure}
+We figure out that artists give rather high ratings for science 
+ficiton, while writers give rather low ratings for it. We expect
+there will be a positive coefficient for $\textbf{artist} * \textbf{Sci-Fi}$ and a negative coefficient for $\textbf{writer} * \textbf{Sci-Fi}$.
+
+The last interaction term we included is $\textbf{writer} * \textbf{Action}$.
+\begin{figure}[ht!]
+\begin{center}
+\includegraphics[width=\textwidth]{action.png}
+\caption{Average Rating for Action Movies vs. Occupations}
+\end{center}
+\end{figure}
+Writers tend to give quite low ratings for action movies. 
+Therefore, using $\textbf{writer} * \textbf{Action}$ as interaction
+term is highly likely to improve the accuracy of lm model.
+
+\subsection{Final lm Model}
+Our final model for lm will use usernum, movienum, some genres of 
+movies, occupation of healthcare, occupation of none, all ZIP 
+codes, and the above interaction terms as predictors. Below is the 
+result of lm model. MAPE of this final model is 0.7416.
+
+\begin{verbatim}
+Call:
+lm(formula = as.formula(indexToStr(u.big, predictors)), data = u.big.trn)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.9727 -0.6896  0.0457  0.7837  3.1895 
+
+Coefficients:
+                  Estimate Std. Error t value Pr(>|t|)    
+(Intercept)       3.704209   0.074279  49.869  < 2e-16 ***
+unknown           0.552036   0.326342   1.692 0.090728 .  
+Animation         0.170824   0.020885   8.179 2.89e-16 ***
+Children         -0.140265   0.015646  -8.965  < 2e-16 ***
+Documentary       0.087128   0.036942   2.358 0.018352 *  
+Drama             0.066530   0.007202   9.237  < 2e-16 ***
+Fantasy           0.005130   0.028925   0.177 0.859235    
+FilmNoir          0.030621   0.025699   1.192 0.233453    
+Horror           -0.035228   0.014615  -2.410 0.015933 *  
+Mystery           0.056156   0.016437   3.416 0.000635 ***
+Romance           0.034074   0.008301   4.105 4.05e-05 ***
+SciFi             0.025546   0.010456   2.443 0.014556 *  
+War               0.029190   0.011573   2.522 0.011667 *  
+Western           0.088530   0.023826   3.716 0.000203 ***
+occ.healthcare   -0.158112   0.021436  -7.376 1.65e-13 ***
+occ.none          0.394998   0.039216  10.072  < 2e-16 ***
+zip.00            0.037829   0.115234   0.328 0.742702    
+zip.01           -0.089628   0.079860  -1.122 0.261728    
+zip.02           -0.017679   0.076324  -0.232 0.816820    
+zip.03            0.121962   0.081188   1.502 0.133045    
+zip.04            0.055574   0.117788   0.472 0.637057    
+zip.05            0.029814   0.083343   0.358 0.720545    
+zip.06           -0.010030   0.077916  -0.129 0.897570    
+zip.07            0.135553   0.093721   1.446 0.148086    
+zip.08            0.094333   0.078748   1.198 0.230958    
+zip.09           -0.214451   0.230985  -0.928 0.353193    
+zip.10           -0.222827   0.076580  -2.910 0.003618 ** 
+zip.11            0.078679   0.077555   1.014 0.310349    
+zip.12           -0.033007   0.085937  -0.384 0.700915    
+zip.13            0.224684   0.105385   2.132 0.033007 *  
+zip.14            0.003484   0.078383   0.044 0.964542    
+zip.15            0.109923   0.080079   1.373 0.169856    
+zip.16           -0.012466   0.092278  -0.135 0.892538    
+zip.17            0.241212   0.084442   2.857 0.004284 ** 
+zip.18           -0.175846   0.102169  -1.721 0.085229 .  
+zip.19            0.046308   0.079443   0.583 0.559955    
+zip.20           -0.007535   0.076386  -0.099 0.921420    
+zip.21           -0.306946   0.078989  -3.886 0.000102 ***
+zip.22            0.006797   0.077186   0.088 0.929834    
+zip.23           -0.081941   0.092725  -0.884 0.376859    
+zip.24            0.358956   0.109337   3.283 0.001027 ** 
+zip.25            0.723887   0.217314   3.331 0.000865 ***
+zip.26            0.168847   0.129310   1.306 0.191639    
+zip.27            0.020279   0.079099   0.256 0.797665    
+zip.28            0.080612   0.083104   0.970 0.332040    
+zip.29           -0.140467   0.077824  -1.805 0.071089 .  
+zip.30            0.067268   0.077536   0.868 0.385625    
+zip.31           -0.026395   0.089785  -0.294 0.768775    
+zip.32            0.091311   0.086623   1.054 0.291832    
+zip.33            0.208017   0.079108   2.630 0.008552 ** 
+zip.34            0.249602   0.124822   2.000 0.045538 *  
+zip.35           -0.130307   0.130882  -0.996 0.319443    
+zip.36            0.163079   0.108591   1.502 0.133160    
+zip.37           -0.043664   0.080018  -0.546 0.585284    
+zip.38           -0.001942   0.113114  -0.017 0.986305    
+zip.39            0.268176   0.105375   2.545 0.010930 *  
+zip.40            0.036754   0.084488   0.435 0.663549    
+zip.41           -0.051167   0.148272  -0.345 0.730026    
+zip.42            0.014457   0.092221   0.157 0.875429    
+zip.43           -0.165980   0.079753  -2.081 0.037420 *  
+zip.44            0.070010   0.077712   0.901 0.367653    
+zip.45            0.162829   0.085994   1.893 0.058296 .  
+zip.46            0.070034   0.088819   0.788 0.430407    
+zip.47            0.117604   0.084383   1.394 0.163412    
+zip.48            0.021169   0.077693   0.272 0.785257    
+zip.49            0.099944   0.083830   1.192 0.233178    
+zip.50            0.044173   0.079807   0.553 0.579923    
+zip.51           -0.034942   0.112668  -0.310 0.756460    
+zip.52            0.139588   0.089750   1.555 0.119880    
+zip.53            0.078190   0.078900   0.991 0.321687    
+zip.54            0.225326   0.083876   2.686 0.007223 ** 
+zip.55           -0.053314   0.074907  -0.712 0.476632    
+zip.56            0.035543   0.154797   0.230 0.818396    
+zip.57            0.088331   0.179401   0.492 0.622461    
+zip.58            0.210878   0.099618   2.117 0.034274 *  
+zip.59           -0.326849   0.104068  -3.141 0.001686 ** 
+zip.60           -0.034938   0.075763  -0.461 0.644696    
+zip.61            0.044179   0.079628   0.555 0.579016    
+zip.62           -0.019812   0.089878  -0.220 0.825540    
+zip.63            0.085334   0.078185   1.091 0.275086    
+zip.64            0.138743   0.092809   1.495 0.134936    
+zip.65           -0.201178   0.096014  -2.095 0.036148 *  
+zip.66            0.333848   0.094959   3.516 0.000439 ***
+zip.67            0.482504   0.104781   4.605 4.13e-06 ***
+zip.68            0.001178   0.086001   0.014 0.989072    
+zip.70           -0.155407   0.093984  -1.654 0.098222 .  
+zip.71            0.178578   0.088593   2.016 0.043834 *  
+zip.73            0.178279   0.085551   2.084 0.037173 *  
+zip.74            0.042242   0.088931   0.475 0.634791    
+zip.75           -0.040322   0.084144  -0.479 0.631801    
+zip.76           -0.060605   0.081957  -0.739 0.459621    
+zip.77            0.058304   0.078738   0.740 0.459011    
+zip.78           -0.134561   0.077430  -1.738 0.082241 .  
+zip.79           -0.099710   0.102827  -0.970 0.332204    
+zip.80           -0.014649   0.076965  -0.190 0.849047    
+zip.81            0.534801   0.121147   4.414 1.01e-05 ***
+zip.82           -0.064771   0.160775  -0.403 0.687047    
+zip.83           -0.001316   0.077724  -0.017 0.986490    
+zip.84           -0.018780   0.081437  -0.231 0.817619    
+zip.85           -0.106705   0.078598  -1.358 0.174593    
+zip.87           -0.066593   0.085140  -0.782 0.434124    
+zip.89            0.269073   0.096745   2.781 0.005416 ** 
+zip.90           -0.126383   0.078259  -1.615 0.106327    
+zip.91            0.128614   0.077539   1.659 0.097180 .  
+zip.92            0.081153   0.076457   1.061 0.288505    
+zip.93            0.001651   0.077236   0.021 0.982945    
+zip.94           -0.100639   0.076425  -1.317 0.187896    
+zip.95            0.089244   0.076410   1.168 0.242823    
+zip.96            0.052160   0.089298   0.584 0.559149    
+zip.97           -0.039650   0.077788  -0.510 0.610251    
+zip.98           -0.051903   0.077034  -0.674 0.500462    
+zip.99           -0.110706   0.086852  -1.275 0.202436    
+zip.E2           -0.362107   0.087619  -4.133 3.59e-05 ***
+zip.K7            0.481313   0.179124   2.687 0.007210 ** 
+zip.L1            0.544492   0.117640   4.628 3.69e-06 ***
+zip.L9           -0.214988   0.142952  -1.504 0.132606    
+zip.M4           -0.336964   0.213025  -1.582 0.113697    
+zip.M7            0.006952   0.217369   0.032 0.974486    
+zip.N2           -0.143201   0.092650  -1.546 0.122202    
+zip.N4            0.124478   0.112371   1.108 0.267976    
+zip.R3            0.658926   0.166636   3.954 7.68e-05 ***
+zip.T8           -0.018944   0.106203  -0.178 0.858428    
+zip.V0           -0.311396   0.126934  -2.453 0.014161 *  
+zip.V1           -0.005249   0.226006  -0.023 0.981470    
+zip.V3           -0.007652   0.093016  -0.082 0.934432    
+zip.V5           -0.049991   0.152021  -0.329 0.742277    
+executive_comedy -0.220221   0.034166  -6.446 1.16e-10 ***
+student_mystrery  0.024543   0.035466   0.692 0.488930    
+artist_SciFi      0.029613   0.058122   0.509 0.610407    
+writer_SciFi     -0.049032   0.044080  -1.112 0.265995    
+writer_action    -0.105585   0.031748  -3.326 0.000882 ***
+best_movie        0.376959   0.009435  39.952  < 2e-16 ***
+worst_movie      -0.635006   0.007388 -85.954  < 2e-16 ***
+nice_person       0.565407   0.010668  52.999  < 2e-16 ***
+tough_person     -0.731534   0.011863 -61.667  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.9785 on 94865 degrees of freedom
+Multiple R-squared:  0.246,	Adjusted R-squared:  0.2449 
+F-statistic: 230.9 on 134 and 94865 DF,  p-value: < 2.2e-16
+
+[1] 0.7416
+
 \end{verbatim}
 \section{nmf model}
 \tab{}In the nmf model, we input usernum, movienum, and rating as the input of the training set of the recosystem()'s \$train() function.
