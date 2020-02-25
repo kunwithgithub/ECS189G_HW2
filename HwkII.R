@@ -21,7 +21,11 @@ lmFinalModel<-function(u.big.tst){
 	MAPE(u.big.tst$rating,ans$p_rating)	#MAPE 
 }
 
-nmfFinalModel <- function(u.big) {
+nmfFinalModel <- function(u.big.tst) {
+
+}
+
+nmf_gen <- function(u.big) {
 	require(regtools)
 	require(recosystem)
 	ty <- Reco()
@@ -33,12 +37,13 @@ nmfFinalModel <- function(u.big) {
 	tststX <- data_memory(u.big.tst$usernum, u.big.tst$movienum, rating = NULL)
 	tststY <- u.big.tst[,3]
 
-	ty$train(trnst, opts = list(dim = 25, niter = 80, nmf = TRUE))
+	ty$train(trnst, opts = list(dim = 25, niter = 80, lrate = 0.13, nmf = TRUE))
 	res <- ty$predict(tststX, out_memory())
 	MAPE(res, tststY)
 
 	wh <- ty$output(out_memory(),out_memory())
 	save(wh, file = "WH.RData")
+	return (ty)
 }
 
 
