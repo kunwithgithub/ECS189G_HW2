@@ -6,12 +6,6 @@ ZIP_extractor<-function(ZIP){
 	as.integer(zip_code)
 }
 
-twodizip <- function(zip) {
-	zip <- suppressWarnings(as.numeric(as.character(u.big$ZIP)))
-	zip <- as.factor(floor(zip/1000))
-	return (zip)
-}
-
 lmFinalModel<-function(u.big.tst){
 	ZIP <- u.big.tst$ZIP #parse it from u.big.tst
 	u.big.tst$ZIP <- as.factor(sapply(ZIP,ZIP_extractor)) #reassign after factorizing the vector
@@ -27,7 +21,7 @@ lmFinalModel<-function(u.big.tst){
 	MAPE(u.big.tst$rating,ans$p_rating)	#MAPE 
 }
 
-nmfmodel <- function(u.big) {
+nmfFinalModel <- function(u.big) {
 	require(regtools)
 	require(recosystem)
 	ty <- Reco()
@@ -35,17 +29,18 @@ nmfmodel <- function(u.big) {
 	tst <- tstRows()
 	u.big.tst <- u.big[tst,]
 	u.big.trn <- u.big[-tst,]
-
 	trnst <- data_memory(u.big.trn$usernum, u.big.trn$movienum, rating = u.big.trn$rating)
 	tststX <- data_memory(u.big.tst$usernum, u.big.tst$movienum, rating = NULL)
 	tststY <- u.big.tst[,3]
 
-	ty$train(trnst, opts = list(dim = 20, niter = 40, nmf = TRUE))
+	ty$train(trnst, opts = list(dim = 25, niter = 80, nmf = TRUE))
 	res <- ty$predict(tststX, out_memory())
 	MAPE(res, tststY)
+
 	wh <- ty$output(out_memory(),out_memory())
 	save(wh, file = "WH.RData")
 }
+
 
 # form the database we are gonna use for Hwk2
 initialization <- function() {
