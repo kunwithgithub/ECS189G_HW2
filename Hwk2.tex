@@ -564,6 +564,108 @@ iter      tr_rmse          obj
 \end{verbatim}
 \tab{}Until this point, our nmf model's MAPE() result is 0.7139921 which improve by 0.018 compares to the original model with default tuning parameter. 
 
+\subsection{tune}
+\tab{}After we discovery about the tune function, we found that the tune function will perform cross validation.
+The dims is basically a vector because we can supply it different options of dims, so the tune function can find
+the best validation error according to the given dims. As shown in the following attempts, the tune function helps
+the prediction to be improved from 0.7209669 to 0.7150715 by supplying more elements to the dim vector.
+\begin{verbatim}
+  res = r$tune(
+		trnst,
+		opts = list(dim = c(10, 20, 30),
+		costp_l1 = 0, costq_l1 = 0,
+		lrate = c(0.05, 0.1, 0.2), nthread = 2)
+	)
+
+iter      tr_rmse          obj
+   0       1.6649  3.2927e+005
+   1       1.0078  1.6329e+005
+   2       0.9569  1.5422e+005
+   3       0.9413  1.5149e+005
+   4       0.9329  1.5029e+005
+   5       0.9266  1.4944e+005
+   6       0.9204  1.4859e+005
+   7       0.9144  1.4804e+005
+   8       0.9070  1.4714e+005
+   9       0.8999  1.4651e+005
+  10       0.8927  1.4593e+005
+  11       0.8854  1.4512e+005
+  12       0.8794  1.4458e+005
+  13       0.8738  1.4405e+005
+  14       0.8688  1.4356e+005
+  15       0.8642  1.4315e+005
+  16       0.8601  1.4284e+005
+  17       0.8560  1.4254e+005
+  18       0.8520  1.4223e+005
+  19       0.8480  1.4186e+005
+[1] 0.7209669
+\end{verbatim}
+
+\begin{verbatim}
+  res = r$tune(
+		trnst,
+		opts = list(dim = c(10, 20, 30,40),
+		costp_l1 = 0, costq_l1 = 0,
+		lrate = c(0.05, 0.1, 0.2), nthread = 2)
+	)
+	
+	iter      tr_rmse          obj
+   0       1.6979  3.3937e+005
+   1       1.0126  1.6430e+005
+   2       0.9582  1.5458e+005
+   3       0.9416  1.5160e+005
+   4       0.9330  1.5046e+005
+   5       0.9258  1.4953e+005
+   6       0.9184  1.4856e+005
+   7       0.9107  1.4786e+005
+   8       0.9021  1.4685e+005
+   9       0.8942  1.4616e+005
+  10       0.8865  1.4543e+005
+  11       0.8798  1.4478e+005
+  12       0.8736  1.4412e+005
+  13       0.8686  1.4381e+005
+  14       0.8633  1.4335e+005
+  15       0.8583  1.4281e+005
+  16       0.8540  1.4253e+005
+  17       0.8492  1.4210e+005
+  18       0.8447  1.4173e+005
+  19       0.8405  1.4144e+005
+[1] 0.7182558
+
+\end{verbatim}
+
+\begin{verbatim}
+  res = r$tune(
+		trnst,
+		opts = list(dim = c(10, 20, 30,40,50),
+		costp_l1 = 0, costq_l1 = 0,
+		lrate = c(0.05, 0.1, 0.2), nthread = 2)
+	)
+
+iter      tr_rmse          obj
+   0       1.7224  3.4742e+005
+   1       1.0146  1.6468e+005
+   2       0.9578  1.5451e+005
+   3       0.9413  1.5177e+005
+   4       0.9313  1.5029e+005
+   5       0.9225  1.4925e+005
+   6       0.9131  1.4832e+005
+   7       0.9024  1.4728e+005
+   8       0.8920  1.4615e+005
+   9       0.8831  1.4534e+005
+  11       0.8681  1.4395e+005
+  12       0.8614  1.4331e+005
+  13       0.8552  1.4283e+005
+  14       0.8492  1.4240e+005
+  15       0.8432  1.4194e+005
+  16       0.8374  1.4145e+005
+  17       0.8318  1.4106e+005
+  18       0.8265  1.4076e+005
+  19       0.8210  1.4031e+005
+[1] 0.7150715
+
+\end{verbatim}
+
 \subsection{Lrate}
 \tab{}p.s. After Monday's lecture that discussed about the letter, we've done some search on the learning rate which is the step size between each iteration. We believe that the lrate parameter has the potential to further improve our model's accuracy.
 \begin{verbatim}
