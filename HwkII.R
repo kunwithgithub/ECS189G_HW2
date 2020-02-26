@@ -144,7 +144,9 @@ lmFinalModel<-function(u.big.tst){
 }
 
 nmfFinalModel <- function(u.big.tst) {
-
+  load("WH.RData")
+  head(W)
+  head(H)
 }
 
 nmf_gen <- function(u.big) {
@@ -164,7 +166,9 @@ nmf_gen <- function(u.big) {
 	MAPE(res, tststY)
 
 	wh <- ty$output(out_memory(),out_memory())
-	save(wh, file = "WH.RData")
+  W <- wh$P
+  H <- wh$Q
+	save(W,H, file = "WH.RData")
 	return (ty)
 }
 
