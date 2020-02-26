@@ -145,8 +145,11 @@ lmFinalModel<-function(u.big.tst){
 
 nmfFinalModel <- function(u.big.tst) {
   load("WH.RData")
-  head(W)
-  head(H)
+  w <- wh$P
+  h <- wh$Q
+  a <- w %*% t(h)
+  u.big.tst$pred_rating <- a[u.big.tst$usernum,u.big.tst$movienum]
+  MAPE(u.big.tst$rating, u.big.tst$pred_rating)
 }
 
 nmf_gen <- function(u.big) {
