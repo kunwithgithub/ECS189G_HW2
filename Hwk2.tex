@@ -556,7 +556,7 @@ did not want to ignore any subtle chance.
 \tab{}Unfortunately, after waiting the \$tune() function to complete for a long time, the best costp\_l2 and costq\_l2 still have not changed a bit.
 
 \subsubsection{Lrate}
-\tab{}p.s. After Monday's lecture that discussed about the letter, we've done some search on the learning rate which is the step size between each iteration. We believe that the lrate parameter has the potential to further improve our model's accuracy.
+\tab{}After Monday's lecture that discussed about the letter, we've done some search on the learning rate which is the step size between each iteration. We believe that the lrate parameter has the potential to further improve our model's accuracy.
 \begin{verbatim}
 > ty$train(trnst, opts = list(dim = 25, niter= 80, lrate = 0.13, nmf = TRUE))
 iter      tr_rmse          obj
@@ -604,7 +604,7 @@ We reserved a test set of random 5k objects and trained the models with the rest
 \\\\*
 \tab{}But the strange thing was when we called the \$predict() directly from the trained model instead of obtaining the predicting rating from the A matrix, the \$predict() function could always gave us true values(not "NaN") although the MAPE() results are undoubtly higher than the model trained with the full 100k objects.
 \\\\*
-\tab{}Below are the models we trained with a 5k reserved test set:
+\tab{}Below are the models we have trained with a 5k reserved test set:
 \\\\*
 \textbf{\underline{Default}}
 \begin{verbatim}
