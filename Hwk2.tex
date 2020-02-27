@@ -548,16 +548,12 @@ iter      tr_rmse          obj
 
 \subsubsection{Costp\_l2 and Costq\_l2}
 \tab{}Since recosystem provides us the opportunity to explore the L2 regularization with tuning parameters Costp\_l2 and Costq\_l2, we wanted to see 
-if there are any better values for them besides the default 0.1.
-\\\\*
-
-\\\\*
-\tab{}We have tried some random values between 0.1 to 0.5 for us to put into \$tune() function, but 0.1 was still the best one.
-\\\\*
+if there are any better values for them besides the default 0.1. 
+We have tried some random values between 0.1 to 0.5 for us to put into \$tune() function, but 0.1 was still the best one. 
 We've also used seq() function to generate vectors with continuous numbers differed by 0.002 from 0.01 to 0.1 since the default range is 0.01 to 0.1, and we 
 did not want to ignore any subtle chance.
 \\\\*
-Unfortunately, after waiting the \$tune() function to complete for a long time, the best costp\_l2 and costq\_l2 still have not changed a bit.
+\tab{}Unfortunately, after waiting the \$tune() function to complete for a long time, the best costp\_l2 and costq\_l2 still have not changed a bit.
 
 \subsubsection{Lrate}
 \tab{}p.s. After Monday's lecture that discussed about the letter, we've done some search on the learning rate which is the step size between each iteration. We believe that the lrate parameter has the potential to further improve our model's accuracy.
