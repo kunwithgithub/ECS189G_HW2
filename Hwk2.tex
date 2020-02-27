@@ -1,3 +1,4 @@
+
 \documentclass[11pt]{article} 
 \setlength{\oddsidemargin}{0.0in}
 \setlength{\evensidemargin}{0.0in}
@@ -107,11 +108,9 @@ attempt is to use all genres as predictors. Below is the result:
 \begin{verbatim}
 Call:
 lm(formula = as.formula(indexToStr(u.big, predictors)), data = u.big.trn)
-
 Residuals:
     Min      1Q  Median      3Q     Max 
 -3.1872 -0.6248  0.2613  0.6814  2.1056 
-
 Coefficients:
              Estimate Std. Error t value Pr(>|t|)    
 (Intercept)  3.383414   0.011023 306.929  < 2e-16 ***
@@ -136,11 +135,9 @@ War          0.258046   0.013124  19.663  < 2e-16 ***
 Western      0.190491   0.027305   6.976 3.05e-12 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
 Residual standard error: 1.109 on 94980 degrees of freedom
 Multiple R-squared:  0.03026,	Adjusted R-squared:  0.03007 
 F-statistic:   156 on 19 and 94980 DF,  p-value: < 2.2e-16
-
 [1] 0.8778 # MAPE
 \end{verbatim}
 
@@ -154,11 +151,9 @@ included in our final lm model.
 \begin{verbatim}
 Call:
 lm(formula = as.formula(indexToStr(u.big, predictors)), data = u.big.trn)
-
 Residuals:
     Min      1Q  Median      3Q     Max 
 -3.1460 -0.6262  0.2683  0.6501  2.0426 
-
 Coefficients:
              Estimate Std. Error t value Pr(>|t|)    
 (Intercept)  3.349864   0.006310 530.882  < 2e-16 ***
@@ -177,11 +172,9 @@ War          0.245364   0.012829  19.126  < 2e-16 ***
 Western      0.169018   0.027010   6.258 3.93e-10 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
 Residual standard error: 1.11 on 94986 degrees of freedom
 Multiple R-squared:  0.0285,	Adjusted R-squared:  0.02837 
 F-statistic: 214.4 on 13 and 94986 DF,  p-value: < 2.2e-16
-
 [1] 0.8778 # MAPE
 \end{verbatim}
 
@@ -210,11 +203,9 @@ predictors. Here is the result.
 \begin{verbatim}
 Call:
 lm(formula = as.formula(indexToStr(u.big, predictors)), data = u.big.trn)
-
 Residuals:
     Min      1Q  Median      3Q     Max 
 -2.7801 -0.5709  0.3527  0.5637  2.1075 
-
 Coefficients:
                   Estimate Std. Error t value Pr(>|t|)    
 (Intercept)        3.37842    0.01541 219.192  < 2e-16 ***
@@ -240,11 +231,9 @@ occ.student        0.13405    0.01724   7.774 7.70e-15 ***
 occ.technician     0.15457    0.02474   6.248 4.18e-10 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
 Residual standard error: 1.117 on 94979 degrees of freedom
 Multiple R-squared:  0.01505,	Adjusted R-squared:  0.01484 
 F-statistic: 72.55 on 20 and 94979 DF,  p-value: < 2.2e-16
-
 [1] 0.8798 # MAPE
 \end{verbatim}
 
@@ -258,11 +247,9 @@ the only two occupations we used as predictors are "healthcare" and
 \begin{verbatim}
 Call:
 lm(formula = as.formula(indexToStr(u.big, predictors)), data = u.big.trn)
-
 Residuals:
     Min      1Q  Median      3Q     Max 
 -2.7801 -0.5441  0.4559  0.4559  2.1075 
-
 Coefficients:
                 Estimate Std. Error t value Pr(>|t|)    
 (Intercept)     3.544111   0.003704 956.716  < 2e-16 ***
@@ -270,11 +257,9 @@ occ.healthcare -0.651561   0.021993 -29.626  < 2e-16 ***
 occ.none        0.236006   0.038496   6.131 8.78e-10 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
 Residual standard error: 1.12 on 94997 degrees of freedom
 Multiple R-squared:  0.009606,	Adjusted R-squared:  0.009585 
 F-statistic: 460.7 on 2 and 94997 DF,  p-value: < 2.2e-16
-
 [1] 0.8694 # MAPE
 \end{verbatim}
 We could see that using these two occupations as our predictors 
@@ -412,11 +397,9 @@ MAPE of this final model is 0.7446.
 \begin{verbatim}
 Call:
 lm(formula = as.formula(indexToStr(u.big, predictors)), data = u.big.trn)
-
 Residuals:
     Min      1Q  Median      3Q     Max 
 -3.8027 -0.7197 -0.0117  0.8376  3.0302 
-
 Coefficients:
                    Estimate Std. Error t value Pr(>|t|)    
 (Intercept)       3.7036324  0.0076163 486.274  < 2e-16 ***
@@ -446,13 +429,10 @@ nice_person       0.5612674  0.0098445  57.013  < 2e-16 ***
 tough_person     -0.7346390  0.0110443 -66.517  < 2e-16 ***
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
 Residual standard error: 0.9845 on 94975 degrees of freedom
 Multiple R-squared:  0.2359,	Adjusted R-squared:  0.2357 
 F-statistic:  1222 on 24 and 94975 DF,  p-value: < 2.2e-16
-
 [1] 0.7446
-
 \end{verbatim}
 \section{Nmf Model}
 \tab{}In the nmf model, we input usernum, movienum, and rating as the input of the training set of the recosystem()'s \$train() function.
@@ -486,10 +466,11 @@ iter      tr_rmse          obj
 > MAPE(res, tststY)
 [1] 0.7329318
 \end{verbatim}
-\\*
+
 \tab{}The MAPE() result for the nmf model is 0.7329318, which is not really "bad" consider it is already lower than our best lm model.
 
-\subsection{Dim}
+\subsection{tune}
+\subsubsection{Dim}
 \tab{}To inrease the accuracy, we first tried different \textbf{\underline{dim}}, and see how the MAPE() result changed. We noticed that there would be an "optimal" number within a region, like a "local" optimize point so the result would be the lowest. After tested different dim under multiple distinct interval and considered the rule of thumb that $p << \sqrt{n}$, we choose dim=25:
 \\*
 \begin{verbatim}
@@ -521,7 +502,7 @@ iter      tr_rmse          obj
 \end{verbatim}
 This improve the MAPE() result for 0.01 compared to the default one.
 
-\subsection{Niter}
+\subsubsection{Niter}
 \tab{}Then, we tried different \textbf{\underline{niter}} since we discover the accuracy will increase as this parameter increase. But there is a asymptomatic ceiling for this parameter, which the improvement would not be noticeable or even could decrease the accuracy if we keep increasing it. Thus, after we played around with it, we set niter=80 as it improve our result for another 0.01.
 \begin{verbatim}
     ty$train(trnst, opts = list(dim = 25, niter= 80, nmf = TRUE))
@@ -564,7 +545,7 @@ iter      tr_rmse          obj
 \end{verbatim}
 \tab{}Until this point, our nmf model's MAPE() result is 0.7139921 which improve by 0.018 compares to the original model with default tuning parameter. 
 
-\subsection{Lrate}
+\subsubsection{Lrate}
 \tab{}p.s. After Monday's lecture that discussed about the letter, we've done some search on the learning rate which is the step size between each iteration. We believe that the lrate parameter has the potential to further improve our model's accuracy.
 \begin{verbatim}
     ty$train(trnst, opts = list(dim = 25, niter= 80, lrate = 0.13, nmf = TRUE))
@@ -1070,11 +1051,9 @@ Coefficients:
 Call:
 lm(formula = paste(indexToStr(u.big, c(1, 2, 9:27)), "+age*transID"),
     data = u.big)
-
 Residuals:
     Min      1Q  Median      3Q     Max 
 -3.3772 -0.6569  0.1600  0.7701  2.4915 
-
 Coefficients:
               Estimate Std. Error t value Pr(>|t|)    
 (Intercept)  1.399e+01  1.743e+00   8.022 1.05e-15 ***
@@ -1104,11 +1083,9 @@ transID     -1.169e-08  1.972e-09  -5.929 3.06e-09 ***
 age:transID  2.631e-10  5.603e-11   4.696 2.65e-06 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
 Residual standard error: 1.088 on 99975 degrees of freedom
 Multiple R-squared:  0.06615,   Adjusted R-squared:  0.06593
 F-statistic: 295.1 on 24 and 99975 DF,  p-value: < 2.2e-16
-
 [1] 0.8498
 \end{verbatim}
 
@@ -1118,11 +1095,9 @@ F-statistic: 295.1 on 24 and 99975 DF,  p-value: < 2.2e-16
 \begin{verbatim}
 Call:
 lm(formula = indexToStr(u.big, c(1, 2, 5, 6, 8, 9:27)), data = u.big)
-
 Residuals:
     Min      1Q  Median      3Q     Max 
 -3.4609 -0.6635  0.1413  0.7724  2.8314 
-
 Coefficients:
               Estimate Std. Error t value Pr(>|t|)    
 (Intercept)  3.997e+00  9.552e-02  41.846  < 2e-16 ***
@@ -1261,11 +1236,9 @@ War          1.865e-01  1.246e-02  14.967  < 2e-16 ***
 Western      1.209e-01  2.574e-02   4.696 2.65e-06 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
 Residual standard error: 1.074 on 99866 degrees of freedom
 Multiple R-squared:  0.09014,   Adjusted R-squared:  0.08893
 F-statistic: 74.39 on 133 and 99866 DF,  p-value: < 2.2e-16
-
 [1] 0.844
 \end{verbatim}
 
