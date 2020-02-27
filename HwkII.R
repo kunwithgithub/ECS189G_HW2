@@ -145,11 +145,13 @@ lmFinalModel<-function(u.big.tst){
 
 nmfFinalModel <- function(u.big.tst) {
   load("WH.RData")
-  w <- wh$P
-  h <- wh$Q
+  w <- wh$P[-1,]
+  h <- wh$Q[-1,]
   a <- w %*% t(h)
-  u.big.tst$pred_rating <- a[u.big.tst$usernum,u.big.tst$movienum]
-  MAPE(u.big.tst$rating, u.big.tst$pred_rating)
+  for (i in 1:nrow(u.big.tst)){
+  	p2_rating[i] <- ts[nmf.tst$usernum[i],nmf.tst$movienum[i]]
+  }
+  MAPE(u.big.tst$rating, p2_rating)
 }
 
 nmf_gen <- function(u.big) {
@@ -169,10 +171,7 @@ nmf_gen <- function(u.big) {
 	MAPE(res, tststY)
 
 	wh <- ty$output(out_memory(),out_memory())
-  W <- wh$P
-  H <- wh$Q
-	save(W,H, file = "WH.RData")
-	return (ty)
+	save(wh, file = "WH.RData")
 }
 
 # form the database we are gonna use for Hwk2
