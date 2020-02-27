@@ -144,6 +144,7 @@ lmFinalModel<-function(u.big.tst){
 }
 
 nmfFinalModel <- function(u.big.tst) {
+  require(regtools)
   load("WH.RData")
   w <- wh$P[-1,]
   h <- wh$Q[-1,]
