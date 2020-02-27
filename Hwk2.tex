@@ -614,6 +614,20 @@ age*occ (Appendix, 3.2.1). I wrote the function \textbf{avgOccRating},
 and plotted the average movie rating that each group of occupation gives.
 I contributed to the lm section of the report explaining why I did this.
 
+\subsection{Dianfeng Jiang}
+I worked both on lm model and nmf model. In lm model, I tested serveral 
+different models without interaction terms at first. After that, I was mainly 
+exploring the interaction terms which corresponding to the \textbf{Ex-model1-10} 
+in the appendix. And, I tried to filter those that have a coefficient that are >0.1 
+\textbf{(Ex-model4, Ex-model10)} and built a new model based on them. I developed several
+variances of Bochao's \textbf{IndexToStr()} function to help me deploy multiple interaction 
+terms within one model and see their effectiveness. 
+In nmf model, I applied the method I described in the beginning of the \textbf{Tune} section 
+that used both \$train() and \$tune() together to find the best model. I wrote the \textbf{nmf_gen()} 
+function based on the best model I had found, and the \textbf{nmfFinalModel()}. I also wrote the 
+report for the nmf model.
+
+
 \section{Appendix}
 \subsection{Helper Functions}
 \subsubsection{Initialization}
