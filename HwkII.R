@@ -164,13 +164,12 @@ nmf_gen <- function(u.big) {
 	tst <- tstRows()
 	u.big.tst <- u.big[tst,]
 	u.big.trn <- u.big[-tst,]
-	trnst <- data_memory(u.big.trn$usernum, u.big.trn$movienum, rating = u.big.trn$rating)
+	trnst <- data_memory(u.big$usernum, u.big$movienum, rating = u.big$rating)
 	tststX <- data_memory(u.big.tst$usernum, u.big.tst$movienum, rating = NULL)
 	tststY <- u.big.tst[,3]
 
 	ty$train(trnst, opts = list(dim = 25, niter = 80, lrate = 0.13, nmf = TRUE))
 	res <- ty$predict(tststX, out_memory())
-	MAPE(res, tststY)
 
 	wh <- ty$output(out_memory(),out_memory())
 	save(wh, file = "WH.RData")
