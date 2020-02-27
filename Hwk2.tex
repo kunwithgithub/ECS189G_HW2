@@ -386,6 +386,7 @@ Writers tend to give quite low ratings for action movies.
 Therefore, using $\textbf{writer} * \textbf{Action}$ as interaction
 term is highly likely to improve the accuracy of lm model.
 
+
 \subsection{Final lm Model}
 Our final model for lm will use usernum, movienum, some genres of 
 movies, occupation of healthcare, occupation of none, and the above 
@@ -432,6 +433,7 @@ Multiple R-squared:  0.2359,	Adjusted R-squared:  0.2357
 F-statistic:  1222 on 24 and 94975 DF,  p-value: < 2.2e-16
 [1] 0.7446
 \end{verbatim}
+
 \section{Nmf Model}
 \tab{}In the nmf model, we input usernum, movienum, and rating as the input of the training set of the recosystem()'s \$train() function.
 \\*
@@ -592,6 +594,7 @@ iter      tr_rmse          obj
 
 \subsection{Final Nmf Model}
 \tab{}Combining all these tuning parameters we've tried, our final model was yield with opts = list(dim = 25, niter= 80, lrate = 0.13, nmf = TRUE), and this gave us 0.7130311 in the MAPE() result, and it's 0.02 better in accuracy than the original default model.
+
 
 \section{Contributions}
 \subsection{Bochao Xin}
