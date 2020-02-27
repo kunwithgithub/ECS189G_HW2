@@ -149,8 +149,8 @@ nmfFinalModel <- function(u.big.tst) {
   w <- wh$P[-1,]
   h <- wh$Q[-1,]
   a <- w %*% t(h)
+  nmf.tst <- u.big.tst
   for (i in 1:nrow(u.big.tst)){
-    nmf.tst <- u.big.tst
     tmp <- ts[nmf.tst$usernum[i],nmf.tst$movienum[i]]
     ifelse(tmp=="NaN", nmf.tst$p2_rating[i] <- 0, nmf.tst$p2_rating[i] <- tmp)
   }
