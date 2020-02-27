@@ -340,7 +340,6 @@ might prefer science fiction. Therefoer, using interaction terms
 of occupations and genres might help us improve the accuracy of 
 our prediction.
 
-\clearpage
 The first interaction term we include is $\textbf{executive} * \textbf{comedy}$.
 \begin{figure}[ht!]
 \begin{center}
@@ -352,7 +351,7 @@ The first interaction term we include is $\textbf{executive} * \textbf{comedy}$.
 From the above plot, we find that executives tend to give low 
 ratings for comedy. Therefore, we want to use $\textbf{executive} * \textbf{comedy}$ as 
 one of interaction terms in our lm model.
-
+\clearpage
 The second interaction term we include is $\textbf{student} * \textbf{mystery}$.
 \begin{figure}[ht!]
 \begin{center}
@@ -595,9 +594,77 @@ iter      tr_rmse          obj
 \tab{}Combining all these tuning parameters we've tried, our final model was yield with opts = list(dim = 25, niter= 80, lrate = 0.13, nmf = TRUE), and this gave us 0.7130311 in the MAPE() result, and it's 0.02 better in accuracy than the original default model.
 
 \section{Contributions}
+\subsection{Bochao Xin}
+I worked primarily on lm model, and also tried a few nmf models. I 
+developed helper function \textbf{Initalization()}, 
+\textbf{roundToNearestInt}, and \textbf{IndexToStr()}. I proposed 
+to add \textbf{movienum}, and \textbf{usernum} to predictors, and 
+developed the way to use them in lm model. I explored which 
+occupations and genres we should add to our lm model. I tested the 
+relationship between occupations and genres and added those five 
+interaction terms into our lm model. Actually, I also tested the 
+relationship between age and genres because I think people of 
+different ages might have different preference for movies. But I
+found that there is no strong relationship between them.
+I also wrote most(not all!) of the report for lm model.
 
 \section{Appendix}
 \subsection{Helper Functions}
+\subsubsection{Initialization}
+This function is used to prepare the u.big dataset used throughout
+this assignment.
+\begin{verbatim}
+# form the database we are gonna use for Hwk2
+initialization <- function() {
+	library(regtools)
+	ratings <- read.table('ml-100k/u.data')
+	names(ratings) <- c('usernum', 'movienum', 'rating', 'transID')
+	demog <- read.table('ml-100k/u.user', sep='|')
+	names(demog) <- c('usernum', 'age', 'gender', 'occ', 'ZIP')
+	u.big <- merge(ratings,demog,by.x=1,by.y=1)
+	movies <- read.csv("ml-100k/u.item", sep="|", check.names=FALSE, header=FALSE, fill=TRUE)
+	genres <- read.csv("ml-100k/u.genre", sep="|", check.names=FALSE, header=FALSE)
+	movies <- movies[,c(-2:-5)]
+	names(movies) <- c('movienum', as.character(genres[,1]))
+	u.big <- merge(u.big, movies, by = "movienum", all.x = TRUE)
+	u.big <- u.big[order(u.big$usernum, u.big$movienum),]
+	# print(sum(is.na(u.big$ZIP)))
+	# how to deal with ZIP
+	zips <- as.character(u.big$ZIP)
+	zips <- substr(zips,1,2)
+	u.big$ZIP <- as.factor(zips)
+	# print(sum(is.na(u.big$ZIP)))
+	return(u.big)
+}
+\end{verbatim}
+\subsubsection{Round To the Nearest Int}
+This function is used to convert result to the nearest int.
+\begin{verbatim}
+roundToNearestInt <- function(vec){
+  a <- vec %% 1
+  vec[a >= 0.5] = ceiling(vec[a >= 0.5])
+  vec[a < 0.5] = floor(vec[a < 0.5])
+  return(vec)
+}
+\end{verbatim}
+\subsubsection{Index To String}
+This function is used to convert the input columns into the string
+that will be used in lm model. We want this function so that we don't need to manually type all the predictors by ourselves.
+\begin{verbatim}
+indexToStr <- function(u.big, index){
+  str <- paste("rating ", "~",
+        paste(' ', colnames(u.big)[index], ' ', sep = "", collapse = "+"),
+        sep = "")
+  return(str)
+}
+> u.big <- initialization()
+> indexToStr(u.big, c(1,2,9:27))
+[1] "rating ~ movienum + usernum + unknown + Action + Adventure + 
+Animation + Children's + Comedy + Crime + Documentary + Drama + 
+Fantasy + Film-Noir + Horror + Musical + Mystery + Romance + Sci-Fi 
++ Thriller + War + Western "
+\end{verbatim}
+
 \subsection{Other Lm Models Attempted}
 \subsubsection{Ex-model1}
 \textbf{\underline{(Age$*$occ)}}
