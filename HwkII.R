@@ -151,7 +151,7 @@ nmfFinalModel <- function(u.big.tst) {
   a <- w %*% t(h)
   nmf.tst <- u.big.tst
   for (i in 1:nrow(nmf.tst)){
-    tmp <- a[nmf.tst$usernum[i],nmf.tst$movienum[i]]
+    nmf.tst$p2_rating[i] <- a[nmf.tst$usernum[i],nmf.tst$movienum[i]]
   }
   MAPE(nmf.tst$rating, nmf.tst$p2_rating)
 }
