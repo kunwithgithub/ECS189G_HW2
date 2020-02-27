@@ -149,7 +149,8 @@ nmfFinalModel <- function(u.big.tst) {
   h <- wh$Q[-1,]
   a <- w %*% t(h)
   for (i in 1:nrow(u.big.tst)){
-  	p2_rating[i] <- ts[nmf.tst$usernum[i],nmf.tst$movienum[i]]
+    tmp <- ts[nmf.tst$usernum[i],nmf.tst$movienum[i]]
+    ifelse(tmp=="NaN", p2_rating[i] <- 0, p2_rating[i] <- tmp)
   }
   MAPE(u.big.tst$rating, p2_rating)
 }
