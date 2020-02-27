@@ -614,6 +614,12 @@ age*occ (Appendix, 3.2.1). I wrote the function \textbf{avgOccRating},
 and plotted the average movie rating that each group of occupation gives.
 I contributed to the lm section of the report explaining why I did this.
 
+\subsection{Shikun Huang}
+I tried a few combination of lm models and wrote a very small part of 
+description about the use of the dims parameter of tune function in the appendix.
+To be honest, my teammates also contributed to help me to understand
+the materials.
+
 \subsection{Dianfeng Jiang}
 I worked both on lm model and nmf model. In lm model, I tested serveral 
 different models without interaction terms at first. After that, I was mainly 
@@ -667,6 +673,10 @@ roundToNearestInt <- function(vec){
   return(vec)
 }
 \end{verbatim}
+\subsubsection{dims variable in tune}
+why the dims parameter in tune function is a vector? it is because the tune function will perform cross validation,
+and dims will hold different options of  latent factors, so tune function can find the dim that has the best validation error.
+
 \subsubsection{Index To String}
 This function is used to convert the input columns into the string
 that will be used in lm model. We want this function so that we don't need to manually type all the predictors by ourselves.
