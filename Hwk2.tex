@@ -598,7 +598,7 @@ iter      tr_rmse          obj
 \end{verbatim}
 \tab{}Indeed, it turns out that the MAPE() result become 0.6027273. which is 0.01 better than our previous model with lrate default to 0.1.
 
-\subsection{Mistakes we've made}
+\subsection{Mistake we've made}
 \tab{}During the process of training this model, we have made some mistakes. The most dominate one was that we trained the model the same way as we trained the lm models. 
 We reserved a test set of random 5k objects and trained the models with the rest of 95k objects. This attempt caused our H matrix contains many "NaN" rows because there might be some movies not covered in the 95k training set but showed up in the 5k test set. These "NaN" rows made some of our predictions became "NaN" later on when we tried to predict the test set ratings from the A matrix, which made the MAPE() function really unhappy, and thus MAPE() gave us "NaN" results!
 \\\\*
@@ -743,7 +743,7 @@ iter      tr_rmse          obj
 [1] 0.7130311
 \end{verbatim}
 
-\subsection{Some other attempts}
+\subsection{Other attempt}
 \tab{}In addition, we also tried plugging in different predictors to user\_index and item\_index to see what happens to the predicting results. But the accuracy of the combinations we have tested are all worse than the original one with usernum and movienum. We think that since we are predicting existing users and movies, movienum and usernum should be the most dominant predictor in this model. Thus, we still stick to our previous best model.
 
 \subsection{Final Nmf Model}
