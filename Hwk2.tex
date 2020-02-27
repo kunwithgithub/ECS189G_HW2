@@ -590,10 +590,10 @@ iter      tr_rmse          obj
 \tab{}Indeed, it turns out that the MAPE() result become 0.6027273. which is 0.01 better than our previous model with lrate default to 0.1.
 
 \subsection{Mistakes we've made}
-\tab{}In training this model, we have made some mistakes. The most dominate one is that we trained the model the same way as we trained the lm models. 
-We reserved a test set with a random 5k objects and trained the models with the rest 95k objects. This attempt caused our H matrix contains many "NaN" rows because there might be some movies not covered in the 95k training set. These "NaN" rows made some of our predictions became "NaN" later when we tried to predict the test set rating from the A matrix, which made the MAPE() function really unhappy, and thus MAPE() gave us "NaN" result!
+\tab{}During the process of training this model, we have made some mistakes. The most dominate one was that we trained the model the same way as we trained the lm models. 
+We reserved a test set of random 5k objects and trained the models with the rest of 95k objects. This attempt caused our H matrix contains many "NaN" rows because there might be some movies not covered in the 95k training set but showed up in the 5k test set. These "NaN" rows made some of our predictions became "NaN" later on when we tried to predict the test set ratings from the A matrix, which made the MAPE() function really unhappy, and thus MAPE() gave us "NaN" results!
 \\\\*
-\tab{}But the strange thing was when we called the \$predict() directly from the trained model instead obtaining the predicting rating from the A matrix, the \$predict() function could always gave us values without "NaN" although the MAPE() results are undoubtly higher than the model trained with the full 100k objects.
+\tab{}But the strange thing was when we called the \$predict() directly from the trained model instead of obtaining the predicting rating from the A matrix, the \$predict() function could always gave us true values(not "NaN") although the MAPE() results are undoubtly higher than the model trained with the full 100k objects.
 \\\\*
 \tab{}Below are the models we trained with a 5k reserved test set:
 \\\\*
