@@ -435,7 +435,7 @@ F-statistic:  1222 on 24 and 94975 DF,  p-value: < 2.2e-16
 \section{Nmf Model}
 \tab{}In the nmf model, we input usernum, movienum, and rating as the input of the training set of the recosystem()'s \$train() function.
 \\*
-\subsection{default}
+\subsection{Default}
 \tab{}We ran the \$train() function once with default tuning parameters beside the nmf = TRUE because we want the function to use nmf method instead of svd, and we want to see the MAPE() result with default settings so we could have a standard later on when we tune it.
 \begin{verbatim}
      ty$train(trnst, opts = list(nmf = TRUE))
@@ -467,7 +467,7 @@ iter      tr_rmse          obj
 
 \tab{}The MAPE() result for the nmf model is 0.7329318, which is not really "bad" consider it is already lower than our best lm model.
 
-\subsection{tune}
+\subsection{Tune}
 \tab{} To increase the accuracy of our model, we used \$tune() and \$train() function together to tune the tuning parameters in the opts. Often, we utilized \$tune() function in the beginning to traverse a large scale of values since it automatically pick the best values from the input vector. After that, we used \$train() to test a small amounts of values that varies a little from the best values the \$tune() function gave us. We choose this method because running \$tune() function generally took longer time to receive the result than retrain the model with a new parameter, and the running time of \$tune() will increase drastically when we increased the amount of values we wanted to guess. Thus, it's more time efficient for us to apply.
 \subsubsection{Dim}
 \tab{}We first tried different \textbf{\underline{dim}}, and see how the MAPE() result changed. We noticed that there would be an "optimal" number within a region, like a "local" optimize point so the result would be the lowest. After tested different dim under multiple distinct interval and considered the rule of thumb that $p << \sqrt{n}$, we choose dim=25:
